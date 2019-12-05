@@ -15,10 +15,11 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textinput_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:hint="Email" />
+            android:hint="@string/email"
+            android:inputType="textEmailAddress" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -27,10 +28,11 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textinput_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:hint="Password" />
+            android:hint="@string/password"
+            android:inputType="textPassword" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -47,16 +49,17 @@
             android:layout_marginHorizontal="4dp"
             android:layout_weight="1"
             android:onClick="buttonRegisterOnClick"
-            android:text="Create an Account" />
+            android:text="@string/create_an_account" />
 
         <Button
-            android:id="@+id/button_register"
+            android:id="@+id/button_login"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
             android:layout_weight="1"
-            android:text="Login" />
+            android:onClick="buttonLoginOnClick"
+            android:text="@string/login" />
     </LinearLayout>
 
 </LinearLayout>
