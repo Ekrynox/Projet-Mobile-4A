@@ -2,10 +2,7 @@ package com.example.projetmobile4a.model
 
 import com.google.gson.annotations.SerializedName
 
-class RestLogin {
-    @SerializedName("error")
-    var error: String? = null
-
+class RestUser : RestDefault() {
     @SerializedName("id")
     var id: Number? = null
 

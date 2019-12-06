@@ -1,6 +1,7 @@
 package com.example.projetmobile4a.controller
 
-import com.example.projetmobile4a.model.RestLogin
+import com.example.projetmobile4a.model.RestDefault
+import com.example.projetmobile4a.model.RestUser
 import com.example.projetmobile4a.view.RestApi
 
 import retrofit2.Retrofit
@@ -66,8 +67,18 @@ class Rest {
     }
 
 
-    fun login(success: ((RestLogin) -> Unit)?, failure: (() -> Unit)?, email: String, password: String) {
+    fun login(success: ((RestUser) -> Unit)?, failure: (() -> Unit)?, email: String, password: String) {
         val call = gerritAPI?.login(email, password)
-        call?.enqueue(RestCallBack<RestLogin>(success, failure))
+        call?.enqueue(RestCallBack<RestUser>(success, failure))
+    }
+
+    fun logout(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?) {
+        val call = gerritAPI?.logout()
+        call?.enqueue(RestCallBack<RestDefault>(success, failure))
+    }
+
+    fun getDiscussions(success: ((List<RestUser>) -> Unit)?, failure: (() -> Unit)?) {
+        val call = gerritAPI?.getDiscussions()
+        call?.enqueue(RestCallBack<List<RestUser>>(success, failure))
     }
 }
