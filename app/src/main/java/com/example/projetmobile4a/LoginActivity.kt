@@ -1,7 +1,7 @@
 package com.example.projetmobile4a
 
 import com.example.projetmobile4a.controller.Rest
-import com.example.projetmobile4a.model.RestLogin
+import com.example.projetmobile4a.model.RestUser
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -31,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
         api?.login(this::loginResponse, null, findViewById<EditText>(R.id.textinput_email).text.toString(), findViewById<EditText>(R.id.textinput_password).text.toString())
     }
 
-    private fun loginResponse(data: RestLogin) {
+    private fun loginResponse(data: RestUser) {
         if (data.error == null) {
             Log.d(TAG, data.pseudo)
 
