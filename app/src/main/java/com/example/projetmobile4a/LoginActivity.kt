@@ -10,8 +10,6 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 
-private const val TAG : String = "LoginActivity"
-
 class LoginActivity : AppCompatActivity() {
     private var api : Rest? = null
 
@@ -33,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loginResponse(data: RestUser) {
         if (data.error == null) {
-            Log.d(TAG, data.pseudo)
+            Log.d(this.toString(), data.pseudo)
 
             val intent = Intent(this, MainActivity::class.java).apply {}
             startActivity(intent)
@@ -41,6 +39,6 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        Log.d(TAG, data.error)
+        Log.d(this.toString(), data.error)
     }
 }
