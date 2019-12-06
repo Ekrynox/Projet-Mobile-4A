@@ -2,6 +2,7 @@ package com.example.projetmobile4a.controller
 
 import com.example.projetmobile4a.model.RestDefault
 import com.example.projetmobile4a.model.RestUser
+import com.example.projetmobile4a.model.RestUsersList
 import com.example.projetmobile4a.view.RestApi
 
 import retrofit2.Retrofit
@@ -19,6 +20,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 
 import java.net.CookieHandler
 import java.net.CookieManager
+import java.util.*
 
 
 class Rest {
@@ -30,7 +32,7 @@ class Rest {
         }
     }
 
-    private val apiURL = "https://hollywood-messenger.glitch.me/api/"
+    private val apiURL = "https://hollywood-messenger-mobile.glitch.me/api/"
     private var gson : Gson? = null
     private var retrofit : Retrofit? = null
     private var gerritAPI : RestApi? = null
@@ -77,8 +79,8 @@ class Rest {
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
-    fun getDiscussions(success: ((List<RestUser>) -> Unit)?, failure: (() -> Unit)?) {
+    fun getDiscussions(success: ((RestUsersList) -> Unit)?, failure: (() -> Unit)?) {
         val call = gerritAPI?.getDiscussions()
-        call?.enqueue(RestCallBack<List<RestUser>>(success, failure))
+        call?.enqueue(RestCallBack<RestUsersList>(success, failure))
     }
 }
