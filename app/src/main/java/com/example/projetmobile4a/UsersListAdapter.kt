@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projetmobile4a.model.RestUser
+import com.google.android.material.button.MaterialButton
 
-class UsersListAdapter(private val data: List<RestUser>) :
+class UsersListAdapter(private val data: List<RestUser>, private val friends: List<RestUser>) :
     RecyclerView.Adapter<UsersListAdapter.MyViewHolder>() {
 
     class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view)
@@ -20,6 +21,30 @@ class UsersListAdapter(private val data: List<RestUser>) :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.view.findViewById<TextView>(R.id.textView).text = data[position].pseudo
+
+        var ok = false
+        for (friend in friends) {
+            if (friend.id == data[position].id) {
+                ok = true
+            }
+        }
+
+        val button = holder.view.findViewById<MaterialButton>(R.id.add_remove_button)
+        val context = holder.view.context
+
+        if (ok) {
+            button.text = context.getString(R.string.remove)
+            button.icon = context.getDrawable(R.drawable.ic_person_outline_black_24dp)
+            button.iconTint = context.getColorStateList(R.color.colorRemove)
+            button.setTextColor(context.getColorStateList(R.color.colorRemove))
+            button.rippleColor = context.getColorStateList(R.color.colorRemove)
+        } else {
+            button.text = context.getString(R.string.add)
+            button.icon = context.getDrawable(R.drawable.ic_person_add_black_24dp)
+            button.iconTint = context.getColorStateList(R.color.colorAdd)
+            button.setTextColor(context.getColorStateList(R.color.colorAdd))
+            button.rippleColor = context.getColorStateList(R.color.colorAdd)
+        }
     }
 
     override fun getItemCount() = data.size
