@@ -79,8 +79,15 @@ class Rest {
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
+
     fun getDiscussions(success: ((RestUsersList) -> Unit)?, failure: (() -> Unit)?) {
         val call = gerritAPI?.getDiscussions()
+        call?.enqueue(RestCallBack<RestUsersList>(success, failure))
+    }
+
+
+    fun getFriends(success: ((RestUsersList) -> Unit)?, failure: (() -> Unit)?) {
+        val call = gerritAPI?.getFriends()
         call?.enqueue(RestCallBack<RestUsersList>(success, failure))
     }
 }

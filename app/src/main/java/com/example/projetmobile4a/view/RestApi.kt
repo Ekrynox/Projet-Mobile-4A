@@ -21,4 +21,8 @@ interface RestApi {
 
     @GET("users/discussions")
     fun getDiscussions() : Call<RestUsersList>
+
+
+    @GET("friends")
+    fun getFriends() : Call<RestUsersList>
 }
