@@ -3,4 +3,6 @@
     <color name="colorPrimary">#fafafa</color>
     <color name="colorPrimaryDark">#c7c7c7</color>
     <color name="colorAccent">#039be5</color>
+    <color name="colorAdd">#00c853</color>
+    <color name="colorRemove">#d32f2f</color>
 </resources>

@@ -5,10 +5,7 @@ import com.example.projetmobile4a.model.RestUser
 import com.example.projetmobile4a.model.RestUsersList
 
 import retrofit2.Call
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
-import retrofit2.http.Field
-import retrofit2.http.GET
+import retrofit2.http.*
 import java.util.*
 
 interface RestApi {
@@ -21,4 +18,15 @@ interface RestApi {
 
     @GET("users/discussions")
     fun getDiscussions() : Call<RestUsersList>
+
+
+    @GET("friends")
+    fun getFriends() : Call<RestUsersList>
+
+    @FormUrlEncoded
+    @POST("friends")
+    fun addFriend(@Field("id") id : Number) : Call<RestDefault>
+
+    @DELETE("friends/{id}")
+    fun removeFriend(@Path("id") id : Number) : Call<RestDefault>
 }
