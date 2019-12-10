@@ -26,9 +26,9 @@ class LoginActivity : AppCompatActivity() {
         pref =  getPreferences(Context.MODE_PRIVATE)
         email = pref?.getString("email", "")!!
         password = pref?.getString("password", "")!!
-        api?.login(this::loginResponse, null, email, password)
 
         api = Rest.getInstance()
+        api?.login(this::loginResponse, null, email, password)
     }
 
     fun buttonRegisterOnClick(view: View) {
