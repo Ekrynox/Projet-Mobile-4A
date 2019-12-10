@@ -10,7 +10,7 @@ import com.example.projetmobile4a.model.RestDefault
 import com.example.projetmobile4a.model.RestUser
 import com.google.android.material.button.MaterialButton
 
-class UsersListAdapter(private val data: List<RestUser>, private val friends: List<RestUser>, private val update: (() -> Unit)?) :
+class UsersListAdapter(private val users: List<RestUser>, private val friends: List<RestUser>, private val update: (() -> Unit)?, private val userId: Int) :
     RecyclerView.Adapter<UsersListAdapter.MyViewHolder>() {
 
     private var rest: Rest = Rest.getInstance()
@@ -24,11 +24,15 @@ class UsersListAdapter(private val data: List<RestUser>, private val friends: Li
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.view.findViewById<TextView>(R.id.textView).text = data[position].pseudo
+        holder.view.findViewById<TextView>(R.id.textView).text = users[position].pseudo
+
+        if (users[position].id == userId) {
+            return
+        }
 
         var ok = false
         for (friend in friends) {
-            if (friend.id == data[position].id) {
+            if (friend.id == users[position].id) {
                 ok = true
             }
         }
@@ -48,7 +52,7 @@ class UsersListAdapter(private val data: List<RestUser>, private val friends: Li
                     if (res.error == null) {
                         update?.invoke()
                     }
-                }, null, data[position].id!!)
+                }, null, users[position].id!!)
             }
         } else {
             button.text = context.getString(R.string.add)
@@ -62,10 +66,10 @@ class UsersListAdapter(private val data: List<RestUser>, private val friends: Li
                     if (res.error == null) {
                         update?.invoke()
                     }
-                }, null, data[position].id!!)
+                }, null, users[position].id!!)
             }
         }
     }
 
-    override fun getItemCount() = data.size
+    override fun getItemCount() = users.size
 }

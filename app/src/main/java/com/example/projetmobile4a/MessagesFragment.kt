@@ -19,19 +19,20 @@ class MessagesFragment : Fragment() {
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
-    private var rest: Rest = Rest.getInstance()
+    private var userId = 0
+    private var userPseudo = ""
+
+    private var api: Rest = Rest.getInstance()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        createUserList()
-        return inflater.inflate(R.layout.fragment_messages, container, false)
-    }
+        userId = arguments?.getInt("USER_ID") ?: 0
+        userPseudo = arguments?.getString("USER_PSEUDO") ?: ""
 
-    private fun createUserList() {
-        rest.getDiscussions(fun (users: RestUsersList) {
-            rest.getFriends(fun (friends: RestUsersList) {
+        api.getDiscussions(fun (users: RestUsersList) {
+            api.getFriends(fun (friends: RestUsersList) {
                 if (users.error == null) {
                     viewManager = LinearLayoutManager(activity)
-                    viewAdapter = UsersListAdapter(users.users!!, friends.users!!, this::updateUserList)
+                    viewAdapter = UsersListAdapter(users.users!!, friends.users!!, this::updateUserList, userId)
                     recyclerView = my_recycler_view.apply {
                         setHasFixedSize(true)
                         layoutManager = viewManager
@@ -48,13 +49,15 @@ class MessagesFragment : Fragment() {
                 }
             }, null)
         }, null)
+
+        return inflater.inflate(R.layout.fragment_messages, container, false)
     }
 
     private fun updateUserList() {
-        rest.getDiscussions(fun (users: RestUsersList) {
-            rest.getFriends(fun (friends: RestUsersList) {
+        api.getDiscussions(fun (users: RestUsersList) {
+            api.getFriends(fun (friends: RestUsersList) {
                 if (users.error == null) {
-                    viewAdapter = UsersListAdapter(users.users!!, friends.users!!, this::updateUserList)
+                    viewAdapter = UsersListAdapter(users.users!!, friends.users!!, this::updateUserList, userId)
                     recyclerView.swapAdapter(viewAdapter, false)
                     return
                 }

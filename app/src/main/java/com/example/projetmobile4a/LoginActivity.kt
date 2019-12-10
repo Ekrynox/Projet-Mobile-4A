@@ -13,8 +13,8 @@ import com.example.projetmobile4a.model.RestUser
 
 
 class LoginActivity : AppCompatActivity() {
-    private var api: Rest? = null
-    private var pref: SharedPreferences? = null
+    private val api = Rest.getInstance()
+    private lateinit var pref: SharedPreferences
 
     private var email = ""
     private var password = ""
@@ -23,12 +23,12 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        pref =  getPreferences(Context.MODE_PRIVATE)
-        email = pref?.getString("email", "")!!
-        password = pref?.getString("password", "")!!
+        pref = getPreferences(Context.MODE_PRIVATE)
 
-        api = Rest.getInstance()
-        api?.login(this::loginResponse, null, email, password)
+        email = pref.getString("email", "")!!
+        password = pref.getString("password", "")!!
+
+        api.login(this::loginResponse, null, email, password)
     }
 
     fun buttonRegisterOnClick(@Suppress("UNUSED_PARAMETER") view: View) {
@@ -39,28 +39,32 @@ class LoginActivity : AppCompatActivity() {
     fun buttonLoginOnClick(@Suppress("UNUSED_PARAMETER") view: View) {
         email = findViewById<EditText>(R.id.textinput_email).text.toString()
         password = findViewById<EditText>(R.id.textinput_password).text.toString()
-        api?.login(this::loginResponse, null, email, password)
+        api.login(this::loginResponse, null, email, password)
     }
 
     private fun loginResponse(data: RestUser) {
         if (data.error == null) {
-            val editor = pref?.edit()
-            editor?.putString("email", email)
-            editor?.apply()
-            editor?.commit()
-            editor?.putString("password", password)
-            editor?.apply()
-            editor?.commit()
+            val editor = pref.edit()
+            editor.putString("email", email)
+            editor.putString("password", password)
+            editor.apply()
+            editor.commit()
 
             val intent = Intent(this, MainActivity::class.java).apply {}
+            intent.putExtra("USER_ID", data.id)
+            intent.putExtra("USER_PSEUDO", data.pseudo)
             startActivity(intent)
             finish()
-            return
         } else if (data.error == "already_logged") {
-            val intent = Intent(this, MainActivity::class.java).apply {}
-            startActivity(intent)
-            finish()
-            return
+            api.getUser(fun (user: RestUser) {
+                if (user.error == null) {
+                    val intent = Intent(this, MainActivity::class.java).apply {}
+                    intent.putExtra("USER_ID", user.id)
+                    intent.putExtra("USER_PSEUDO", user.pseudo)
+                    startActivity(intent)
+                    finish()
+                }
+            }, null)
         }
     }
 }

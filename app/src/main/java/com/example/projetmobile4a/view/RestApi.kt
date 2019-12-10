@@ -16,6 +16,10 @@ interface RestApi {
     @GET("users/logout")
     fun logout() : Call<RestDefault>
 
+
+    @GET("user")
+    fun getUser() : Call<RestUser>
+
     @GET("users/discussions")
     fun getDiscussions() : Call<RestUsersList>
 
