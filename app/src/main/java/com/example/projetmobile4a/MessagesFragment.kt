@@ -20,12 +20,11 @@ class MessagesFragment : Fragment() {
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
-    private var rest : Rest? = null
+    private var rest: Rest = Rest.getInstance()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rest = Rest.getInstance()
-        rest?.getDiscussions(fun (users: RestUsersList) {
-            rest?.getFriends(fun (friends: RestUsersList) {
+        rest.getDiscussions(fun (users: RestUsersList) {
+            rest.getFriends(fun (friends: RestUsersList) {
                 this.updateUserList(users, friends)
             }, null)
         }, null)
@@ -36,7 +35,7 @@ class MessagesFragment : Fragment() {
     private fun updateUserList(users: RestUsersList, friends: RestUsersList) {
         if (users.error == null) {
             viewManager = LinearLayoutManager(activity)
-            viewAdapter = UsersListAdapter(users.users!!, friends.users!!)
+            viewAdapter = UsersListAdapter(users.users!!, friends.users!!, null)
             recyclerView = my_recycler_view.apply {
                 setHasFixedSize(true)
                 layoutManager = viewManager

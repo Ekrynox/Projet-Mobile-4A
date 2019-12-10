@@ -5,11 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.projetmobile4a.controller.Rest
+import com.example.projetmobile4a.model.RestDefault
 import com.example.projetmobile4a.model.RestUser
 import com.google.android.material.button.MaterialButton
 
-class UsersListAdapter(private val data: List<RestUser>, private val friends: List<RestUser>) :
+class UsersListAdapter(private val data: List<RestUser>, private val friends: List<RestUser>, private val update: (() -> Unit)?) :
     RecyclerView.Adapter<UsersListAdapter.MyViewHolder>() {
+
+    private var rest: Rest = Rest.getInstance()
 
     class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
@@ -38,12 +42,28 @@ class UsersListAdapter(private val data: List<RestUser>, private val friends: Li
             button.iconTint = context.getColorStateList(R.color.colorRemove)
             button.setTextColor(context.getColorStateList(R.color.colorRemove))
             button.rippleColor = context.getColorStateList(R.color.colorRemove)
+
+            button.setOnClickListener {
+                rest.removeFriend(fun (res: RestDefault) {
+                    if (res.error == null) {
+                        update?.invoke()
+                    }
+                }, null, data[position].id!!)
+            }
         } else {
             button.text = context.getString(R.string.add)
             button.icon = context.getDrawable(R.drawable.ic_person_add_black_24dp)
             button.iconTint = context.getColorStateList(R.color.colorAdd)
             button.setTextColor(context.getColorStateList(R.color.colorAdd))
             button.rippleColor = context.getColorStateList(R.color.colorAdd)
+
+            button.setOnClickListener {
+                rest.addFriend(fun (res: RestDefault) {
+                    if (res.error == null) {
+                        update?.invoke()
+                    }
+                }, null, data[position].id!!)
+            }
         }
     }
 
