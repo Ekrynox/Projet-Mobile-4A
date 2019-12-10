@@ -27,6 +27,6 @@ interface RestApi {
     @POST("friends")
     fun addFriend(@Field("id") id : Number) : Call<RestDefault>
 
-    @DELETE("friends")
-    fun removeFriend(@Query("id") id : Number) : Call<RestDefault>
+    @DELETE("friends/{id}")
+    fun removeFriend(@Path("id") id : Number) : Call<RestDefault>
 }

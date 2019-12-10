@@ -2,7 +2,6 @@ package com.example.projetmobile4a
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,34 +22,43 @@ class MessagesFragment : Fragment() {
     private var rest: Rest = Rest.getInstance()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rest.getDiscussions(fun (users: RestUsersList) {
-            rest.getFriends(fun (friends: RestUsersList) {
-                this.updateUserList(users, friends)
-            }, null)
-        }, null)
-
+        createUserList()
         return inflater.inflate(R.layout.fragment_messages, container, false)
     }
 
-    private fun updateUserList(users: RestUsersList, friends: RestUsersList) {
-        if (users.error == null) {
-            viewManager = LinearLayoutManager(activity)
-            viewAdapter = UsersListAdapter(users.users!!, friends.users!!, null)
-            recyclerView = my_recycler_view.apply {
-                setHasFixedSize(true)
-                layoutManager = viewManager
-                adapter = viewAdapter
-            }
+    private fun createUserList() {
+        rest.getDiscussions(fun (users: RestUsersList) {
+            rest.getFriends(fun (friends: RestUsersList) {
+                if (users.error == null) {
+                    viewManager = LinearLayoutManager(activity)
+                    viewAdapter = UsersListAdapter(users.users!!, friends.users!!, this::updateUserList)
+                    recyclerView = my_recycler_view.apply {
+                        setHasFixedSize(true)
+                        layoutManager = viewManager
+                        adapter = viewAdapter
+                    }
 
-            val dividerItemDecoration = DividerItemDecoration(
-                my_recycler_view.context,
-                (viewManager as LinearLayoutManager).orientation
-            )
-            my_recycler_view.addItemDecoration(dividerItemDecoration)
+                    val dividerItemDecoration = DividerItemDecoration(
+                        my_recycler_view.context,
+                        (viewManager as LinearLayoutManager).orientation
+                    )
+                    my_recycler_view.addItemDecoration(dividerItemDecoration)
 
-            return
-        }
+                    return
+                }
+            }, null)
+        }, null)
+    }
 
-        Log.d(this.toString(), users.error!!)
+    private fun updateUserList() {
+        rest.getDiscussions(fun (users: RestUsersList) {
+            rest.getFriends(fun (friends: RestUsersList) {
+                if (users.error == null) {
+                    viewAdapter = UsersListAdapter(users.users!!, friends.users!!, this::updateUserList)
+                    recyclerView.swapAdapter(viewAdapter, false)
+                    return
+                }
+            }, null)
+        }, null)
     }
 }
