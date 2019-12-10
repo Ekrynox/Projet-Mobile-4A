@@ -31,12 +31,12 @@ class LoginActivity : AppCompatActivity() {
         api?.login(this::loginResponse, null, email, password)
     }
 
-    fun buttonRegisterOnClick(view: View) {
+    fun buttonRegisterOnClick(@Suppress("UNUSED_PARAMETER") view: View) {
         val intent = Intent(this, RegisterActivity::class.java).apply {}
         startActivity(intent)
     }
 
-    fun buttonLoginOnClick(view: View) {
+    fun buttonLoginOnClick(@Suppress("UNUSED_PARAMETER") view: View) {
         email = findViewById<EditText>(R.id.textinput_email).text.toString()
         password = findViewById<EditText>(R.id.textinput_password).text.toString()
         api?.login(this::loginResponse, null, email, password)
