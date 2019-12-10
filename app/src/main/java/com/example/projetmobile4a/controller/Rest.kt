@@ -90,4 +90,14 @@ class Rest {
         val call = gerritAPI?.getFriends()
         call?.enqueue(RestCallBack<RestUsersList>(success, failure))
     }
+
+    fun addFriend(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Number) {
+        val call = gerritAPI?.addFriend(id)
+        call?.enqueue(RestCallBack<RestDefault>(success, failure))
+    }
+
+    fun removeFriend(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Number) {
+        val call = gerritAPI?.removeFriend(id)
+        call?.enqueue(RestCallBack<RestDefault>(success, failure))
+    }
 }
