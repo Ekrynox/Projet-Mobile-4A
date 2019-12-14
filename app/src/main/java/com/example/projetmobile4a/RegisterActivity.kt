@@ -11,7 +11,7 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
     }
 
-    fun buttonRegisterOnClick(view: View) {
+    fun buttonRegisterOnClick(@SuppressWarnings("UNUSED_PARAMETER") view: View) {
 
     }
 }
