@@ -12,12 +12,16 @@ import com.example.projetmobile4a.model.RestMessage
 import com.example.projetmobile4a.model.RestUser
 import com.google.android.material.chip.Chip
 
-class MessagesListAdapter(private val messages: List<RestMessage>, private val users: List<RestUser>, private val userId: Int, private val userPseudo: String) :
+class MessagesListAdapter(private var messages: List<RestMessage>, private var users: List<RestUser>, private val userId: Int, private val userPseudo: String) :
     RecyclerView.Adapter<MessagesListAdapter.MyViewHolder>() {
 
-    private var api: Rest = Rest.getInstance()
-
     class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+
+    fun updateDataset(messages: List<RestMessage>, users: List<RestUser>) {
+        this.messages = messages
+        this.users = users
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context)

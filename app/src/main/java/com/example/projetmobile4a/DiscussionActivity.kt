@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_messages.my_recycler_view
 
 class DiscussionActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewAdapter: MessagesListAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     private var userId = 0
@@ -83,7 +83,7 @@ class DiscussionActivity : AppCompatActivity() {
             if (messages.error == null) {
                 api.getUserById(fun(user: RestUser) {
                     if (user.error == null) {
-                        recyclerView.swapAdapter(MessagesListAdapter(messages.messages!!, listOf(user), userId, userPseudo),true)
+                        viewAdapter.updateDataset(messages.messages!!, listOf(user))
                         scroll && nestedScrollView.fullScroll(View.FOCUS_DOWN)
                     }
                 }, null, discussionId)
