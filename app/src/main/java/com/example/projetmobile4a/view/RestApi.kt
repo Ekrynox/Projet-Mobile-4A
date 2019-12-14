@@ -14,14 +14,14 @@ interface RestApi {
     @POST("auth/login")
     fun login(@Field("email") email : String, @Field("password") password : String) : Call<RestUser>
 
-    @GET("users/logout")
+    @GET("auth/logout")
     fun logout() : Call<RestDefault>
 
 
-    @GET("user")
+    @GET("users")
     fun getUser() : Call<RestUser>
 
-    @GET("user/{id}")
+    @GET("users/{id}")
     fun getUserById(@Path("id") id : Number) : Call<RestUser>
 
     @GET("users/discussions")

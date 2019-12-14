@@ -4,13 +4,13 @@ import com.google.gson.annotations.SerializedName
 
 class RestMessage {
     @SerializedName("id")
-    var id: Number? = null
+    var id: Int? = null
 
     @SerializedName("user")
-    var user: Number? = null
+    var user: Int? = null
 
     @SerializedName("user2")
-    var user2: Number? = null
+    var user2: Int? = null
 
     @SerializedName("date")
     var date: String? = null

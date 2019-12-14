@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 class RestUser : RestDefault() {
     @SerializedName("id")
-    var id: Number? = null
+    var id: Int? = null
 
     @SerializedName("email")
     var email: String? = null
