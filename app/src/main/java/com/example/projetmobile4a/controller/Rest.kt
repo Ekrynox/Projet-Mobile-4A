@@ -5,30 +5,25 @@ import com.example.projetmobile4a.model.RestMessageList
 import com.example.projetmobile4a.model.RestUser
 import com.example.projetmobile4a.model.RestUsersList
 import com.example.projetmobile4a.view.RestApi
-
-import retrofit2.Retrofit
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import okhttp3.JavaNetCookieJar
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-
-import okhttp3.OkHttpClient
-import okhttp3.JavaNetCookieJar
-import okhttp3.logging.HttpLoggingInterceptor
-
 import java.net.CookieHandler
 import java.net.CookieManager
-import java.util.*
 
 
 class Rest {
     companion object {
         @JvmStatic private val instance: Rest = Rest()
 
-        @JvmStatic public fun getInstance(): Rest {
+        @JvmStatic fun getInstance(): Rest {
             return instance
         }
     }
@@ -83,6 +78,11 @@ class Rest {
 
     fun getUser(success: ((RestUser) -> Unit)?, failure: (() -> Unit)?) {
         val call = gerritAPI?.getUser()
+        call?.enqueue(RestCallBack<RestUser>(success, failure))
+    }
+
+    fun getUserById(success: ((RestUser) -> Unit)?, failure: (() -> Unit)?, id: Number) {
+        val call = gerritAPI?.getUserById(id)
         call?.enqueue(RestCallBack<RestUser>(success, failure))
     }
 
