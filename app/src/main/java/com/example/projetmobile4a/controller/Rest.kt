@@ -1,9 +1,6 @@
 package com.example.projetmobile4a.controller
 
-import com.example.projetmobile4a.model.RestDefault
-import com.example.projetmobile4a.model.RestMessageList
-import com.example.projetmobile4a.model.RestUser
-import com.example.projetmobile4a.model.RestUsersList
+import com.example.projetmobile4a.model.*
 import com.example.projetmobile4a.view.RestApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -81,7 +78,7 @@ class Rest {
         call?.enqueue(RestCallBack<RestUser>(success, failure))
     }
 
-    fun getUserById(success: ((RestUser) -> Unit)?, failure: (() -> Unit)?, id: Number) {
+    fun getUserById(success: ((RestUser) -> Unit)?, failure: (() -> Unit)?, id: Int) {
         val call = gerritAPI?.getUserById(id)
         call?.enqueue(RestCallBack<RestUser>(success, failure))
     }
@@ -92,9 +89,14 @@ class Rest {
     }
 
 
-    fun getMessages(success: ((RestMessageList) -> Unit)?, failure: (() -> Unit)?, id: Number) {
+    fun getMessages(success: ((RestMessageList) -> Unit)?, failure: (() -> Unit)?, id: Int) {
         val call = gerritAPI?.getMessages(id)
         call?.enqueue(RestCallBack<RestMessageList>(success, failure))
+    }
+
+    fun addMessages(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Int, data: RestMessageData) {
+        val call = gerritAPI?.addMessages(id, data)
+        call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
 
@@ -103,12 +105,12 @@ class Rest {
         call?.enqueue(RestCallBack<RestUsersList>(success, failure))
     }
 
-    fun addFriend(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Number) {
+    fun addFriend(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Int) {
         val call = gerritAPI?.addFriend(id)
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
-    fun removeFriend(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Number) {
+    fun removeFriend(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Int) {
         val call = gerritAPI?.removeFriend(id)
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }

@@ -1,9 +1,6 @@
 package com.example.projetmobile4a.view
 
-import com.example.projetmobile4a.model.RestDefault
-import com.example.projetmobile4a.model.RestMessageList
-import com.example.projetmobile4a.model.RestUser
-import com.example.projetmobile4a.model.RestUsersList
+import com.example.projetmobile4a.model.*
 
 import retrofit2.Call
 import retrofit2.http.*
@@ -22,14 +19,18 @@ interface RestApi {
     fun getUser() : Call<RestUser>
 
     @GET("users/{id}")
-    fun getUserById(@Path("id") id : Number) : Call<RestUser>
+    fun getUserById(@Path("id") id : Int) : Call<RestUser>
 
     @GET("users/discussions")
     fun getDiscussions() : Call<RestUsersList>
 
 
     @GET("messages/{id}")
-    fun getMessages(@Path("id") id : Number) : Call<RestMessageList>
+    fun getMessages(@Path("id") id : Int) : Call<RestMessageList>
+
+    @FormUrlEncoded
+    @POST("messages")
+    fun addMessages(@Field("id") id: Int, @Field("data") data: RestMessageData) : Call<RestDefault>
 
 
     @GET("friends")
@@ -37,8 +38,8 @@ interface RestApi {
 
     @FormUrlEncoded
     @POST("friends")
-    fun addFriend(@Field("id") id : Number) : Call<RestDefault>
+    fun addFriend(@Field("id") id : Int) : Call<RestDefault>
 
     @DELETE("friends/{id}")
-    fun removeFriend(@Path("id") id : Number) : Call<RestDefault>
+    fun removeFriend(@Path("id") id : Int) : Call<RestDefault>
 }
