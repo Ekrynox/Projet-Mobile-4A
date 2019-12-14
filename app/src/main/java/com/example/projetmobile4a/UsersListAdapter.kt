@@ -42,10 +42,10 @@ class UsersListAdapter(private val users: List<RestUser>, private val friends: L
         }
 
         holder.view.findViewById<LinearLayout>(R.id.linear_layout).setOnClickListener {
-            val intent = Intent(context, DiscussionsActivity::class.java).apply {}
+            val intent = Intent(context, DiscussionActivity::class.java).apply {}
             intent.putExtra("USER_ID", userId)
             intent.putExtra("USER_PSEUDO", userPseudo)
-            intent.putExtra("OTHER_USER_ID", users[position].id)
+            intent.putExtra("USER2_ID", users[position].id)
             context.startActivity(intent)
         }
 
