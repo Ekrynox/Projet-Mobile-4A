@@ -1,6 +1,7 @@
 package com.example.projetmobile4a.view
 
 import com.example.projetmobile4a.model.RestDefault
+import com.example.projetmobile4a.model.RestMessageList
 import com.example.projetmobile4a.model.RestUser
 import com.example.projetmobile4a.model.RestUsersList
 
@@ -22,6 +23,10 @@ interface RestApi {
 
     @GET("users/discussions")
     fun getDiscussions() : Call<RestUsersList>
+
+
+    @GET("messages/{id}")
+    fun getMessages(@Path("id") id : Number) : Call<RestMessageList>
 
 
     @GET("friends")

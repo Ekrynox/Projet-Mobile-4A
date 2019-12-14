@@ -1,6 +1,7 @@
 package com.example.projetmobile4a.controller
 
 import com.example.projetmobile4a.model.RestDefault
+import com.example.projetmobile4a.model.RestMessageList
 import com.example.projetmobile4a.model.RestUser
 import com.example.projetmobile4a.model.RestUsersList
 import com.example.projetmobile4a.view.RestApi
@@ -88,6 +89,12 @@ class Rest {
     fun getDiscussions(success: ((RestUsersList) -> Unit)?, failure: (() -> Unit)?) {
         val call = gerritAPI?.getDiscussions()
         call?.enqueue(RestCallBack<RestUsersList>(success, failure))
+    }
+
+
+    fun getMessages(success: ((RestMessageList) -> Unit)?, failure: (() -> Unit)?, id: Number) {
+        val call = gerritAPI?.getMessages(id)
+        call?.enqueue(RestCallBack<RestMessageList>(success, failure))
     }
 
 
