@@ -1,16 +1,19 @@
 package com.example.projetmobile4a
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projetmobile4a.controller.Rest
-import com.example.projetmobile4a.model.RestMessage
+import com.example.projetmobile4a.model.RestDefault
+import com.example.projetmobile4a.model.RestMessageData
 import com.example.projetmobile4a.model.RestMessageList
 import com.example.projetmobile4a.model.RestUser
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_messages.*
 
 
@@ -38,14 +41,21 @@ class DiscussionActivity : AppCompatActivity() {
 
 
         viewManager = LinearLayoutManager(this)
-        viewAdapter = MessagesListAdapter(ArrayList(), ArrayList(), this::updateMessagesList, userId, userPseudo)
+        viewAdapter = MessagesListAdapter(ArrayList(), ArrayList(), userId, userPseudo)
         recyclerView = my_recycler_view.apply {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
         }
 
-        updateMessagesList()
+        val handler = Handler()
+        val runnable = object : Runnable {
+            override fun run() {
+                updateMessagesList()
+                handler.postDelayed(this, 5000)
+            }
+        }
+        handler.postDelayed(runnable, 0)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -69,10 +79,24 @@ class DiscussionActivity : AppCompatActivity() {
             if (messages.error == null) {
                 api.getUserById(fun(user: RestUser) {
                     if (user.error == null) {
-                        recyclerView.swapAdapter(MessagesListAdapter(messages.messages!!, listOf(user), this::updateMessagesList, userId, userPseudo),true)
+                        recyclerView.swapAdapter(MessagesListAdapter(messages.messages!!, listOf(user), userId, userPseudo),true)
                     }
                 }, null, discussionId)
             }
         }, null, discussionId)
+    }
+
+    fun buttonSendOnClick(@Suppress("UNUSED_PARAMETER") view: View) {
+        if (findViewById<TextInputEditText>(R.id.messageToSend).text.isEmpty()) {
+            return
+        }
+        val data = RestMessageData()
+        data.text = findViewById<TextInputEditText>(R.id.messageToSend).text.toString()
+        api.addMessages(fun (res: RestDefault) {
+            if (res.error == null) {
+                findViewById<TextInputEditText>(R.id.messageToSend).text?.clear()
+                updateMessagesList()
+            }
+        }, null, discussionId, data)
     }
 }

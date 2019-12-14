@@ -95,7 +95,7 @@ class Rest {
     }
 
     fun addMessages(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Int, data: RestMessageData) {
-        val call = gerritAPI?.addMessages(id, data)
+        val call = gerritAPI?.addMessages(id, gson!!.toJson(data))
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 

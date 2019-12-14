@@ -12,7 +12,7 @@ import com.example.projetmobile4a.model.RestMessage
 import com.example.projetmobile4a.model.RestUser
 import com.google.android.material.chip.Chip
 
-class MessagesListAdapter(private val messages: List<RestMessage>, private val users: List<RestUser>, private val update: (() -> Unit)?, private val userId: Int, private val userPseudo: String) :
+class MessagesListAdapter(private val messages: List<RestMessage>, private val users: List<RestUser>, private val userId: Int, private val userPseudo: String) :
     RecyclerView.Adapter<MessagesListAdapter.MyViewHolder>() {
 
     private var api: Rest = Rest.getInstance()
@@ -28,15 +28,18 @@ class MessagesListAdapter(private val messages: List<RestMessage>, private val u
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val context = holder.view.context
 
-        val chip = holder.view.findViewById<Chip>(R.id.chip)
+        val chip = holder.view.findViewById<TextView>(R.id.chip)
         chip.text = messages[position].data?.text
 
         if (messages[position].user == userId) {
-            chip.chipBackgroundColor = context.getColorStateList(R.color.colorAccent)
+            chip.background.setTintList(context.getColorStateList(R.color.colorAccent))
             chip.setTextColor(context.getColorStateList(R.color.colorPrimary))
             holder.view.findViewById<LinearLayout>(R.id.linear_layout).gravity = Gravity.END
             holder.view.findViewById<TextView>(R.id.pseudo).text = userPseudo
         } else {
+            chip.background.setTintList(context.getColorStateList(R.color.colorPrimaryDark))
+            chip.setTextColor(context.getColorStateList(R.color.black))
+            holder.view.findViewById<LinearLayout>(R.id.linear_layout).gravity = Gravity.START
             holder.view.findViewById<TextView>(R.id.pseudo).text = users.find { it.id == messages[position].user }?.pseudo
         }
 

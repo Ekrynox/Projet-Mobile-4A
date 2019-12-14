@@ -7,10 +7,12 @@
     android:clickable="true"
     android:orientation="vertical">
 
-    <com.google.android.material.chip.Chip
+    <TextView
         android:id="@+id/chip"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/oval"
+        android:singleLine="false" />
 
     <TextView
         android:id="@+id/pseudo"

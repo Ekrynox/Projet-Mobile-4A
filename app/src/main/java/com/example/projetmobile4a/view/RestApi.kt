@@ -30,7 +30,7 @@ interface RestApi {
 
     @FormUrlEncoded
     @POST("messages")
-    fun addMessages(@Field("id") id: Int, @Field("data") data: RestMessageData) : Call<RestDefault>
+    fun addMessages(@Field("id") id: Int, @Field("data") data: String) : Call<RestDefault>
 
 
     @GET("friends")
