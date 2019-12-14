@@ -34,13 +34,6 @@ class UsersListAdapter(private val users: List<RestUser>, private val friends: L
             return
         }
 
-        var ok = false
-        for (friend in friends) {
-            if (friend.id == users[position].id) {
-                ok = true
-            }
-        }
-
         holder.view.findViewById<LinearLayout>(R.id.linear_layout).setOnClickListener {
             val intent = Intent(context, DiscussionActivity::class.java).apply {}
             intent.putExtra("USER_ID", userId)
@@ -51,7 +44,7 @@ class UsersListAdapter(private val users: List<RestUser>, private val friends: L
 
         val button = holder.view.findViewById<MaterialButton>(R.id.add_remove_button)
 
-        if (ok) {
+        if (friends.find { it.id == users[position].id } != null) {
             button.text = context.getString(R.string.remove)
             button.icon = context.getDrawable(R.drawable.ic_person_outline_black_24dp)
             button.iconTint = context.getColorStateList(R.color.colorRemove)

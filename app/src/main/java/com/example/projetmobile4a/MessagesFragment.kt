@@ -15,16 +15,13 @@ import com.example.projetmobile4a.model.RestUsersList
 import kotlinx.android.synthetic.main.fragment_messages.*
 
 
-class MessagesFragment : Fragment() {
+class MessagesFragment(private var userId: Int = 0, private var userPseudo: String = "") : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     private var users: List<RestUser> = ArrayList()
     private var friends: List<RestUser> = ArrayList()
-
-    private var userId = 0
-    private var userPseudo = ""
 
     private var api: Rest = Rest.getInstance()
 
@@ -35,11 +32,8 @@ class MessagesFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        userId = arguments?.getInt("USER_ID") ?: 0
-        userPseudo = arguments?.getString("USER_PSEUDO") ?: ""
-
         viewManager = LinearLayoutManager(activity)
-        viewAdapter = UsersListAdapter(users, friends, this::updateUserList, userId)
+        viewAdapter = UsersListAdapter(users, friends, this::updateUserList, userId, userPseudo)
         recyclerView = my_recycler_view.apply {
             setHasFixedSize(true)
             layoutManager = viewManager
@@ -59,7 +53,7 @@ class MessagesFragment : Fragment() {
                     if (friends.error == null) {
                         this.users = users.users!!
                         this.friends = friends.users!!
-                        recyclerView.swapAdapter( UsersListAdapter(this.users, this.friends, this::updateUserList, userId), true)
+                        recyclerView.swapAdapter( UsersListAdapter(this.users, this.friends, this::updateUserList, userId, userPseudo),true)
                     }
                 }, null)
             }

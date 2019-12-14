@@ -10,11 +10,19 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    private var userId = 0
+    private var userPseudo = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        fragment.arguments = intent.extras
+        userId = intent.extras?.getInt("USER_ID") ?: 0
+        userPseudo = intent.extras?.getString("USER_PSEUDO") ?: ""
+
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment, MessagesFragment(userId, userPseudo))
+        transaction.commit()
     }
 
 }
