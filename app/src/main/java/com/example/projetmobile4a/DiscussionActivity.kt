@@ -14,7 +14,9 @@ import com.example.projetmobile4a.model.RestMessageData
 import com.example.projetmobile4a.model.RestMessageList
 import com.example.projetmobile4a.model.RestUser
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.android.synthetic.main.activity_discussion.*
 import kotlinx.android.synthetic.main.fragment_messages.*
+import kotlinx.android.synthetic.main.fragment_messages.my_recycler_view
 
 
 class DiscussionActivity : AppCompatActivity() {
@@ -48,6 +50,8 @@ class DiscussionActivity : AppCompatActivity() {
             adapter = viewAdapter
         }
 
+        updateMessagesList(true)
+
         val handler = Handler()
         val runnable = object : Runnable {
             override fun run() {
@@ -55,7 +59,7 @@ class DiscussionActivity : AppCompatActivity() {
                 handler.postDelayed(this, 5000)
             }
         }
-        handler.postDelayed(runnable, 0)
+        handler.postDelayed(runnable, 5000)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -74,12 +78,13 @@ class DiscussionActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateMessagesList() {
+    private fun updateMessagesList(scroll: Boolean = false) {
         api.getMessages(fun (messages: RestMessageList) {
             if (messages.error == null) {
                 api.getUserById(fun(user: RestUser) {
                     if (user.error == null) {
                         recyclerView.swapAdapter(MessagesListAdapter(messages.messages!!, listOf(user), userId, userPseudo),true)
+                        scroll && nestedScrollView.fullScroll(View.FOCUS_DOWN)
                     }
                 }, null, discussionId)
             }
