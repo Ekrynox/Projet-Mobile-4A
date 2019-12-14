@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projetmobile4a.controller.Rest
+import com.example.projetmobile4a.model.RestMessage
 import com.example.projetmobile4a.model.RestMessageList
 import com.example.projetmobile4a.model.RestUser
 import kotlinx.android.synthetic.main.fragment_messages.*
@@ -30,39 +31,21 @@ class DiscussionActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
+
         userId = intent.extras?.getInt("USER_ID") ?: 0
         userPseudo = intent.extras?.getString("USER_PSEUDO") ?: ""
         discussionId = intent.extras?.getInt("USER2_ID") ?: 0
 
-        api.getMessages(fun (messages: RestMessageList) {
-            if (messages.error == null) {
-                api.getUserById(fun(user: RestUser) {
-                    if (user.error == null) {
-                        viewManager = LinearLayoutManager(this)
-                        viewAdapter = MessagesListAdapter(
-                            messages.messages!!,
-                            listOf(user),
-                            null,
-                            userId,
-                            userPseudo
-                        )
-                        recyclerView = my_recycler_view.apply {
-                            setHasFixedSize(true)
-                            layoutManager = viewManager
-                            adapter = viewAdapter
-                        }
 
-                        val dividerItemDecoration = DividerItemDecoration(
-                            my_recycler_view.context,
-                            (viewManager as LinearLayoutManager).orientation
-                        )
-                        my_recycler_view.addItemDecoration(dividerItemDecoration)
+        viewManager = LinearLayoutManager(this)
+        viewAdapter = MessagesListAdapter(ArrayList(), ArrayList(), this::updateMessagesList, userId, userPseudo)
+        recyclerView = my_recycler_view.apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
 
-                        return
-                    }
-                }, null, discussionId)
-            }
-        }, null, discussionId)
+        updateMessagesList()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -79,5 +62,17 @@ class DiscussionActivity : AppCompatActivity() {
         else -> {
             super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun updateMessagesList() {
+        api.getMessages(fun (messages: RestMessageList) {
+            if (messages.error == null) {
+                api.getUserById(fun(user: RestUser) {
+                    if (user.error == null) {
+                        recyclerView.swapAdapter(MessagesListAdapter(messages.messages!!, listOf(user), this::updateMessagesList, userId, userPseudo),true)
+                    }
+                }, null, discussionId)
+            }
+        }, null, discussionId)
     }
 }

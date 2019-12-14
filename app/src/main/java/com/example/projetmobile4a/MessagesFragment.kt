@@ -53,7 +53,7 @@ class MessagesFragment(private var userId: Int = 0, private var userPseudo: Stri
                     if (friends.error == null) {
                         this.users = users.users!!
                         this.friends = friends.users!!
-                        recyclerView.swapAdapter( UsersListAdapter(this.users, this.friends, this::updateUserList, userId, userPseudo),true)
+                        recyclerView.swapAdapter(UsersListAdapter(this.users, this.friends, this::updateUserList, userId, userPseudo),true)
                     }
                 }, null)
             }
