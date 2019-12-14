@@ -87,7 +87,7 @@ class DiscussionActivity : AppCompatActivity() {
     }
 
     fun buttonSendOnClick(@Suppress("UNUSED_PARAMETER") view: View) {
-        if (findViewById<TextInputEditText>(R.id.messageToSend).text.isEmpty()) {
+        if (findViewById<TextInputEditText>(R.id.messageToSend).text == null || findViewById<TextInputEditText>(R.id.messageToSend).text!!.isEmpty()) {
             return
         }
         val data = RestMessageData()
