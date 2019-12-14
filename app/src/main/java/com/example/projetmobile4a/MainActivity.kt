@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         userPseudo = intent.extras?.getString("USER_PSEUDO") ?: ""
 
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment, MessagesFragment(userId, userPseudo))
+        transaction.add(R.id.fragment, MessagesFragment(userId, userPseudo))
         transaction.commit()
     }
 

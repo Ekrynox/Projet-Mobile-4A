@@ -12,16 +12,23 @@ import com.example.projetmobile4a.model.RestDefault
 import com.example.projetmobile4a.model.RestUser
 import com.google.android.material.button.MaterialButton
 
-class UsersListAdapter(private val users: List<RestUser>, private val friends: List<RestUser>, private val update: (() -> Unit)?, private val userId: Int, private val userPseudo: String) :
+
+
+class UsersListAdapter(private var users: List<RestUser>, private var friends: List<RestUser>, private val update: (() -> Unit)?, private val userId: Int, private val userPseudo: String) :
     RecyclerView.Adapter<UsersListAdapter.MyViewHolder>() {
 
     private var rest: Rest = Rest.getInstance()
 
     class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
+    fun updateDataset(users: List<RestUser>, friends: List<RestUser>) {
+        this.users = users
+        this.friends = friends
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.users_list, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.users_list, parent, false)
         return MyViewHolder(view)
     }
 

@@ -10,18 +10,14 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projetmobile4a.controller.Rest
-import com.example.projetmobile4a.model.RestUser
 import com.example.projetmobile4a.model.RestUsersList
 import kotlinx.android.synthetic.main.fragment_messages.*
 
 
 class MessagesFragment(private var userId: Int = 0, private var userPseudo: String = "") : Fragment() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewAdapter: UsersListAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
-
-    private var users: List<RestUser> = ArrayList()
-    private var friends: List<RestUser> = ArrayList()
 
     private var api: Rest = Rest.getInstance()
 
@@ -33,7 +29,7 @@ class MessagesFragment(private var userId: Int = 0, private var userPseudo: Stri
         super.onActivityCreated(savedInstanceState)
 
         viewManager = LinearLayoutManager(activity)
-        viewAdapter = UsersListAdapter(users, friends, this::updateUserList, userId, userPseudo)
+        viewAdapter = UsersListAdapter(ArrayList(), ArrayList(), this::updateUserList, userId, userPseudo)
         recyclerView = my_recycler_view.apply {
             setHasFixedSize(true)
             layoutManager = viewManager
@@ -51,9 +47,7 @@ class MessagesFragment(private var userId: Int = 0, private var userPseudo: Stri
             if (users.error == null) {
                 api.getFriends(fun(friends: RestUsersList) {
                     if (friends.error == null) {
-                        this.users = users.users!!
-                        this.friends = friends.users!!
-                        recyclerView.swapAdapter(UsersListAdapter(this.users, this.friends, this::updateUserList, userId, userPseudo),true)
+                        viewAdapter.updateDataset(users.users!!, friends.users!!)
                     }
                 }, null)
             }
