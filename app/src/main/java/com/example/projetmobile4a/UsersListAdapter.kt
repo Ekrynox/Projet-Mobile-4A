@@ -1,8 +1,10 @@
 package com.example.projetmobile4a
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projetmobile4a.controller.Rest
@@ -10,7 +12,7 @@ import com.example.projetmobile4a.model.RestDefault
 import com.example.projetmobile4a.model.RestUser
 import com.google.android.material.button.MaterialButton
 
-class UsersListAdapter(private val users: List<RestUser>, private val friends: List<RestUser>, private val update: (() -> Unit)?, private val userId: Int) :
+class UsersListAdapter(private val users: List<RestUser>, private val friends: List<RestUser>, private val update: (() -> Unit)?, private val userId: Int, private val userPseudo: String) :
     RecyclerView.Adapter<UsersListAdapter.MyViewHolder>() {
 
     private var rest: Rest = Rest.getInstance()
@@ -26,6 +28,8 @@ class UsersListAdapter(private val users: List<RestUser>, private val friends: L
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.view.findViewById<TextView>(R.id.textView).text = users[position].pseudo
 
+        val context = holder.view.context
+
         if (users[position].id == userId) {
             return
         }
@@ -37,8 +41,15 @@ class UsersListAdapter(private val users: List<RestUser>, private val friends: L
             }
         }
 
+        holder.view.findViewById<LinearLayout>(R.id.linear_layout).setOnClickListener {
+            val intent = Intent(context, DiscussionsActivity::class.java).apply {}
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("USER_PSEUDO", userPseudo)
+            intent.putExtra("OTHER_USER_ID", users[position].id)
+            context.startActivity(intent)
+        }
+
         val button = holder.view.findViewById<MaterialButton>(R.id.add_remove_button)
-        val context = holder.view.context
 
         if (ok) {
             button.text = context.getString(R.string.remove)

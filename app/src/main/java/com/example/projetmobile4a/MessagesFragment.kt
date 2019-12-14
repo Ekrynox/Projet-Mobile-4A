@@ -32,7 +32,7 @@ class MessagesFragment : Fragment() {
             api.getFriends(fun (friends: RestUsersList) {
                 if (users.error == null) {
                     viewManager = LinearLayoutManager(activity)
-                    viewAdapter = UsersListAdapter(users.users!!, friends.users!!, this::updateUserList, userId)
+                    viewAdapter = UsersListAdapter(users.users!!, friends.users!!, this::updateUserList, userId, userPseudo)
                     recyclerView = my_recycler_view.apply {
                         setHasFixedSize(true)
                         layoutManager = viewManager
@@ -57,7 +57,7 @@ class MessagesFragment : Fragment() {
         api.getDiscussions(fun (users: RestUsersList) {
             api.getFriends(fun (friends: RestUsersList) {
                 if (users.error == null) {
-                    viewAdapter = UsersListAdapter(users.users!!, friends.users!!, this::updateUserList, userId)
+                    viewAdapter = UsersListAdapter(users.users!!, friends.users!!, this::updateUserList, userId, userPseudo)
                     recyclerView.swapAdapter(viewAdapter, false)
                     return
                 }
