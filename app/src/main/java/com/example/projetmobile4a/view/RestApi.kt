@@ -21,6 +21,9 @@ interface RestApi {
     @GET("user")
     fun getUser() : Call<RestUser>
 
+    @GET("user/{id}")
+    fun getUserById(@Path("id") id : Number) : Call<RestUser>
+
     @GET("users/discussions")
     fun getDiscussions() : Call<RestUsersList>
 
