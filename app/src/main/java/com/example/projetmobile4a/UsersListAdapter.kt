@@ -41,7 +41,7 @@ class UsersListAdapter(private var data: List<RestGroupOrUser>, private var frie
             val context = holder.view.context
 
             holder.view.findViewById<LinearLayout>(R.id.linear_layout).setOnClickListener {
-                val intent = Intent(context, DiscussionActivity::class.java).apply {}
+                val intent = Intent(context, MessagesActivity::class.java).apply {}
                 intent.putExtra("USER_ID", userId)
                 intent.putExtra("USER_PSEUDO", userPseudo)
                 intent.putExtra("USER2_ID", data[position].user!!.id)
@@ -89,7 +89,7 @@ class UsersListAdapter(private var data: List<RestGroupOrUser>, private var frie
             val context = holder.view.context
 
             holder.view.findViewById<LinearLayout>(R.id.linear_layout).setOnClickListener {
-                val intent = Intent(context, DiscussionActivity::class.java).apply {}
+                val intent = Intent(context, MessagesActivity::class.java).apply {}
                 intent.putExtra("USER_ID", userId)
                 intent.putExtra("USER_PSEUDO", userPseudo)
                 intent.putExtra("GROUP_ID", data[position].group!!.id)

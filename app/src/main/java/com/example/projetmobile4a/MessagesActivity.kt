@@ -6,17 +6,15 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projetmobile4a.controller.Rest
 import com.example.projetmobile4a.model.*
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.activity_discussion.*
-import kotlinx.android.synthetic.main.fragment_messages.*
-import kotlinx.android.synthetic.main.fragment_messages.my_recycler_view
 
 
-class DiscussionActivity : AppCompatActivity() {
+class MessagesActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: MessagesListAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
@@ -30,7 +28,7 @@ class DiscussionActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_discussion)
+        setContentView(R.layout.activity_messages)
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
@@ -50,7 +48,7 @@ class DiscussionActivity : AppCompatActivity() {
 
         viewManager = LinearLayoutManager(this)
         viewAdapter = MessagesListAdapter(ArrayList(), ArrayList(), userId, userPseudo)
-        recyclerView = my_recycler_view.apply {
+        recyclerView = findViewById<RecyclerView>(R.id.my_recycler_view).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
@@ -91,7 +89,7 @@ class DiscussionActivity : AppCompatActivity() {
                     api.getUserById(fun(user: RestUser) {
                         if (user.error == null) {
                             viewAdapter.updateDataset(messages.messages!!, listOf(user))
-                            scroll && nestedScrollView.fullScroll(View.FOCUS_DOWN)
+                            scroll && findViewById<NestedScrollView>(R.id.nestedScrollView).fullScroll(View.FOCUS_DOWN)
                         }
                     }, null, discussionId)
                 }
@@ -102,7 +100,7 @@ class DiscussionActivity : AppCompatActivity() {
                     api.getGroupById(fun(group: RestGroup) {
                         if (group.error == null) {
                             viewAdapter.updateDataset(messages.messages!!, group.users!!)
-                            scroll && nestedScrollView.fullScroll(View.FOCUS_DOWN)
+                            scroll && findViewById<NestedScrollView>(R.id.nestedScrollView).fullScroll(View.FOCUS_DOWN)
                         }
                     }, null, discussionId)
                 }

@@ -2,6 +2,7 @@ package com.example.projetmobile4a
 
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +14,9 @@ import com.example.projetmobile4a.controller.Rest
 import com.example.projetmobile4a.model.RestGroupOrUser
 import com.example.projetmobile4a.model.RestGroupsList
 import com.example.projetmobile4a.model.RestUsersList
-import kotlinx.android.synthetic.main.fragment_messages.*
 
 
-class MessagesFragment(private var userId: Int = 0, private var userPseudo: String = "") : Fragment() {
+class DiscussionsFragment(private var userId: Int = 0, private var userPseudo: String = "") : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: UsersListAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
@@ -24,7 +24,7 @@ class MessagesFragment(private var userId: Int = 0, private var userPseudo: Stri
     private var api: Rest = Rest.getInstance()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_messages, container, false)
+        return inflater.inflate(R.layout.fragment_discussions, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -32,16 +32,25 @@ class MessagesFragment(private var userId: Int = 0, private var userPseudo: Stri
 
         viewManager = LinearLayoutManager(activity)
         viewAdapter = UsersListAdapter(ArrayList(), ArrayList(), this::updateUserList, userId, userPseudo)
-        recyclerView = my_recycler_view.apply {
+        recyclerView = activity!!.findViewById<RecyclerView>(R.id.my_recycler_view).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
         }
 
-        val dividerItemDecoration = DividerItemDecoration(my_recycler_view.context,  (viewManager as LinearLayoutManager).orientation)
-        my_recycler_view.addItemDecoration(dividerItemDecoration)
+        val dividerItemDecoration = DividerItemDecoration(recyclerView.context,  (viewManager as LinearLayoutManager).orientation)
+        recyclerView.addItemDecoration(dividerItemDecoration)
 
         updateUserList()
+
+        val handler = Handler()
+        val runnable = object : Runnable {
+            override fun run() {
+                updateUserList()
+                handler.postDelayed(this, 10000)
+            }
+        }
+        handler.postDelayed(runnable, 10000)
     }
 
     private fun updateUserList() {
