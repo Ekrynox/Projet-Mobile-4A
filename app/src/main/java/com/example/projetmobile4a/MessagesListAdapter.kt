@@ -8,10 +8,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.projetmobile4a.controller.Rest
 import com.example.projetmobile4a.model.RestMessage
 import com.example.projetmobile4a.model.RestUser
-import com.google.android.material.chip.Chip
 
 class MessagesListAdapter(private var messages: List<RestMessage>, private var users: List<RestUser>, private val userId: Int, private val userPseudo: String) :
     RecyclerView.Adapter<MessagesListAdapter.MyViewHolder>() {

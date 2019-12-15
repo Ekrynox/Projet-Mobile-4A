@@ -6,9 +6,6 @@ class RestUser : RestDefault() {
     @SerializedName("id")
     var id: Int? = null
 
-    @SerializedName("email")
-    var email: String? = null
-
     @SerializedName("pseudo")
     var pseudo: String? = null
 }

@@ -9,12 +9,6 @@ class RestMessage {
     @SerializedName("user")
     var user: Int? = null
 
-    @SerializedName("user2")
-    var user2: Int? = null
-
-    @SerializedName("group")
-    var group: Int? = null
-
     @SerializedName("date")
     var date: String? = null
 
