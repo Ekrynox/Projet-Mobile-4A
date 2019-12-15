@@ -16,7 +16,7 @@ import com.example.projetmobile4a.model.RestGroupsList
 import com.example.projetmobile4a.model.RestUsersList
 
 
-class DiscussionsFragment(private var userId: Int = 0, private var userPseudo: String = "") : Fragment() {
+class DiscussionsFragment(private var userId: Int, private var userPseudo: String) : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: UsersListAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager

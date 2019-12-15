@@ -36,7 +36,7 @@ class Rest {
 
     init {
         interceptor = HttpLoggingInterceptor()
-        interceptor?.level = HttpLoggingInterceptor.Level.BODY
+        //interceptor?.level = HttpLoggingInterceptor.Level.BODY
         cookie = CookieManager()
         client = OkHttpClient.Builder().addNetworkInterceptor(interceptor!!).cookieJar(JavaNetCookieJar(cookie!!)).build()
 
