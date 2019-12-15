@@ -1,5 +1,6 @@
 package com.example.projetmobile4a
 
+import android.text.Html
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -33,18 +34,18 @@ class MessagesListAdapter(private var messages: List<RestMessage>, private var u
         val context = holder.view.context
 
         val chip = holder.view.findViewById<TextView>(R.id.chip)
-        chip.text = messages[position].data?.text
+        chip.text = Html.fromHtml(messages[position].data?.text , Html.FROM_HTML_MODE_LEGACY)
 
         if (messages[position].user == userId) {
             chip.background.setTintList(context.getColorStateList(R.color.colorAccent))
             chip.setTextColor(context.getColorStateList(R.color.colorPrimary))
             holder.view.findViewById<LinearLayout>(R.id.linear_layout).gravity = Gravity.END
-            holder.view.findViewById<TextView>(R.id.pseudo).text = userPseudo
+            holder.view.findViewById<TextView>(R.id.pseudo).text = Html.fromHtml(userPseudo , Html.FROM_HTML_MODE_LEGACY)
         } else {
             chip.background.setTintList(context.getColorStateList(R.color.colorPrimaryDark))
             chip.setTextColor(context.getColorStateList(R.color.black))
             holder.view.findViewById<LinearLayout>(R.id.linear_layout).gravity = Gravity.START
-            holder.view.findViewById<TextView>(R.id.pseudo).text = users.find { it.id == messages[position].user }?.pseudo
+            holder.view.findViewById<TextView>(R.id.pseudo).text = Html.fromHtml(users.find { it.id == messages[position].user }?.pseudo , Html.FROM_HTML_MODE_LEGACY)
         }
 
         if (position + 1 < itemCount && messages[position + 1].user == messages[position].user) {

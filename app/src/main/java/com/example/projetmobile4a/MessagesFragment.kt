@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projetmobile4a.controller.Rest
+import com.example.projetmobile4a.model.RestGroupOrUser
+import com.example.projetmobile4a.model.RestGroupsList
 import com.example.projetmobile4a.model.RestUsersList
 import kotlinx.android.synthetic.main.fragment_messages.*
 
@@ -47,7 +49,18 @@ class MessagesFragment(private var userId: Int = 0, private var userPseudo: Stri
             if (users.error == null) {
                 api.getFriends(fun(friends: RestUsersList) {
                     if (friends.error == null) {
-                        viewAdapter.updateDataset(users.users!!, friends.users!!)
+                        api.getGroups(fun (groups: RestGroupsList) {
+                            if (groups.error == null) {
+                                val data = ArrayList<RestGroupOrUser>()
+                                for (user in users.users!!) {
+                                    data.add(RestGroupOrUser(user))
+                                }
+                                for (group in groups.groups!!) {
+                                    data.add(RestGroupOrUser(group))
+                                }
+                                viewAdapter.updateDataset(data, friends.users!!)
+                            }
+                        }, null)
                     }
                 }, null)
             }

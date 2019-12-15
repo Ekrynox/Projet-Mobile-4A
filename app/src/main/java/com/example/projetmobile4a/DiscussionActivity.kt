@@ -9,10 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projetmobile4a.controller.Rest
-import com.example.projetmobile4a.model.RestDefault
-import com.example.projetmobile4a.model.RestMessageData
-import com.example.projetmobile4a.model.RestMessageList
-import com.example.projetmobile4a.model.RestUser
+import com.example.projetmobile4a.model.*
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.activity_discussion.*
 import kotlinx.android.synthetic.main.fragment_messages.*
@@ -27,6 +24,7 @@ class DiscussionActivity : AppCompatActivity() {
     private var userId = 0
     private var userPseudo = ""
     private var discussionId = 0
+    private var discussionType = 0
 
     private var api: Rest = Rest.getInstance()
 
@@ -40,6 +38,14 @@ class DiscussionActivity : AppCompatActivity() {
         userId = intent.extras?.getInt("USER_ID") ?: 0
         userPseudo = intent.extras?.getString("USER_PSEUDO") ?: ""
         discussionId = intent.extras?.getInt("USER2_ID") ?: 0
+        if (discussionId == 0) {
+            discussionId = intent.extras?.getInt("GROUP_ID") ?: 0
+            if (discussionId != 0) {
+                discussionType = 2
+            }
+        } else {
+            discussionType = 1
+        }
 
 
         viewManager = LinearLayoutManager(this)
@@ -79,16 +85,29 @@ class DiscussionActivity : AppCompatActivity() {
     }
 
     private fun updateMessagesList(scroll: Boolean = false) {
-        api.getMessages(fun (messages: RestMessageList) {
-            if (messages.error == null) {
-                api.getUserById(fun(user: RestUser) {
-                    if (user.error == null) {
-                        viewAdapter.updateDataset(messages.messages!!, listOf(user))
-                        scroll && nestedScrollView.fullScroll(View.FOCUS_DOWN)
-                    }
-                }, null, discussionId)
-            }
-        }, null, discussionId)
+        if (discussionType == 1) {
+            api.getMessages(fun(messages: RestMessageList) {
+                if (messages.error == null) {
+                    api.getUserById(fun(user: RestUser) {
+                        if (user.error == null) {
+                            viewAdapter.updateDataset(messages.messages!!, listOf(user))
+                            scroll && nestedScrollView.fullScroll(View.FOCUS_DOWN)
+                        }
+                    }, null, discussionId)
+                }
+            }, null, discussionId)
+        } else if (discussionType == 2) {
+            api.getMessagesGroups(fun(messages: RestMessageList) {
+                if (messages.error == null) {
+                    api.getGroupById(fun(group: RestGroup) {
+                        if (group.error == null) {
+                            viewAdapter.updateDataset(messages.messages!!, group.users!!)
+                            scroll && nestedScrollView.fullScroll(View.FOCUS_DOWN)
+                        }
+                    }, null, discussionId)
+                }
+            }, null, discussionId)
+        }
     }
 
     fun buttonSendOnClick(@Suppress("UNUSED_PARAMETER") view: View) {
@@ -97,11 +116,20 @@ class DiscussionActivity : AppCompatActivity() {
         }
         val data = RestMessageData()
         data.text = findViewById<TextInputEditText>(R.id.messageToSend).text.toString()
-        api.addMessages(fun (res: RestDefault) {
-            if (res.error == null) {
-                findViewById<TextInputEditText>(R.id.messageToSend).text?.clear()
-                updateMessagesList()
-            }
-        }, null, discussionId, data)
+        if (discussionType == 1) {
+            api.addMessages(fun(res: RestDefault) {
+                if (res.error == null) {
+                    findViewById<TextInputEditText>(R.id.messageToSend).text?.clear()
+                    updateMessagesList()
+                }
+            }, null, discussionId, data)
+        } else if (discussionType == 2) {
+            api.addMessagesGroups(fun(res: RestDefault) {
+                if (res.error == null) {
+                    findViewById<TextInputEditText>(R.id.messageToSend).text?.clear()
+                    updateMessagesList()
+                }
+            }, null, discussionId, data)
+        }
     }
 }

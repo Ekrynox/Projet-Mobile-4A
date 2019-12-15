@@ -25,6 +25,14 @@ interface RestApi {
     fun getDiscussions() : Call<RestUsersList>
 
 
+    @GET("messagesGroups/{id}")
+    fun getMessagesGroups(@Path("id") id : Int) : Call<RestMessageList>
+
+    @FormUrlEncoded
+    @POST("messagesGroups")
+    fun addMessagesGroups(@Field("id") id: Int, @Field("data") data: String) : Call<RestDefault>
+
+
     @GET("messages/{id}")
     fun getMessages(@Path("id") id : Int) : Call<RestMessageList>
 
@@ -42,4 +50,11 @@ interface RestApi {
 
     @DELETE("friends/{id}")
     fun removeFriend(@Path("id") id : Int) : Call<RestDefault>
+
+
+    @GET("groups")
+    fun getGroups() : Call<RestGroupsList>
+
+    @GET("groups/{id}")
+    fun getGroupById(@Path("id") id : Int) : Call<RestGroup>
 }

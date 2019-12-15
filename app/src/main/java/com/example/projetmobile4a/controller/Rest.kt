@@ -100,6 +100,17 @@ class Rest {
     }
 
 
+    fun getMessagesGroups(success: ((RestMessageList) -> Unit)?, failure: (() -> Unit)?, id: Int) {
+        val call = gerritAPI?.getMessagesGroups(id)
+        call?.enqueue(RestCallBack<RestMessageList>(success, failure))
+    }
+
+    fun addMessagesGroups(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Int, data: RestMessageData) {
+        val call = gerritAPI?.addMessagesGroups(id, gson!!.toJson(data))
+        call?.enqueue(RestCallBack<RestDefault>(success, failure))
+    }
+
+
     fun getFriends(success: ((RestUsersList) -> Unit)?, failure: (() -> Unit)?) {
         val call = gerritAPI?.getFriends()
         call?.enqueue(RestCallBack<RestUsersList>(success, failure))
@@ -113,5 +124,16 @@ class Rest {
     fun removeFriend(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Int) {
         val call = gerritAPI?.removeFriend(id)
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
+    }
+
+
+    fun getGroups(success: ((RestGroupsList) -> Unit)?, failure: (() -> Unit)?) {
+        val call = gerritAPI?.getGroups()
+        call?.enqueue(RestCallBack<RestGroupsList>(success, failure))
+    }
+
+    fun getGroupById(success: ((RestGroup) -> Unit)?, failure: (() -> Unit)?, id: Int) {
+        val call = gerritAPI?.getGroupById(id)
+        call?.enqueue(RestCallBack<RestGroup>(success, failure))
     }
 }
