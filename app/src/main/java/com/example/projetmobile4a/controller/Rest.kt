@@ -1,5 +1,7 @@
 package com.example.projetmobile4a.controller
 
+
+import com.example.projetmobile4a.GlobalApplication
 import com.example.projetmobile4a.model.*
 import com.example.projetmobile4a.view.RestApi
 import com.google.gson.Gson
@@ -34,6 +36,8 @@ class Rest {
     private var cookie : CookieHandler? = null
     private var client : OkHttpClient? = null
 
+    private var sql: SQL? = null
+
     init {
         interceptor = HttpLoggingInterceptor()
         //interceptor?.level = HttpLoggingInterceptor.Level.BODY
@@ -43,12 +47,17 @@ class Rest {
         gson = GsonBuilder().setLenient().create()
         retrofit = Retrofit.Builder().baseUrl(apiURL).addConverterFactory(GsonConverterFactory.create(gson)).client(client!!).build()
         gerritAPI = retrofit?.create(RestApi::class.java)
+
+        if (GlobalApplication.getAppContext() != null) {
+            sql = SQL.getInstance(GlobalApplication.getAppContext()!!)
+        }
     }
 
-    inner class RestCallBack<T>(private val success: ((T) -> Unit)?, private val failure: (() -> Unit)?) :
+    inner class RestCallBack<T>(private val success: ((T) -> Unit)?, private val failure: (() -> Unit)?, private val sqlSet : ((T) -> Unit)? = null, private val sqlGet: (() -> T?)? = null) :
         Callback<T> {
         override fun onResponse(call: Call<T>, response: Response<T>) {
             if (response.isSuccessful) {
+                sqlSet?.invoke(response.body())
                 success?.invoke(response.body())
             } else {
                 println(response.errorBody())
@@ -56,8 +65,18 @@ class Rest {
         }
 
         override fun onFailure(call: Call<T>, t: Throwable) {
-            t.printStackTrace()
-            failure?.invoke()
+            if (sqlGet == null) {
+                //t.printStackTrace()
+                failure?.invoke()
+            } else {
+                val res = sqlGet.invoke()
+                if (res == null) {
+                    //t.printStackTrace()
+                    failure?.invoke()
+                } else {
+                    success?.invoke(res)
+                }
+            }
         }
     }
 
@@ -72,20 +91,53 @@ class Rest {
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
-
+    private var userId = 0
     fun getUser(success: ((RestUser) -> Unit)?, failure: (() -> Unit)?) {
         val call = gerritAPI?.getUser()
-        call?.enqueue(RestCallBack<RestUser>(success, failure))
+        call?.enqueue(RestCallBack<RestUser>(success, failure, {
+            if (it.error == null) {
+                userId = it.id!!
+                sql?.sql()?.addUser(it)
+            }
+        }, {
+            return@RestCallBack sql?.sql()?.getUser(userId)
+        }))
     }
 
     fun getUserById(success: ((RestUser) -> Unit)?, failure: (() -> Unit)?, id: Int) {
         val call = gerritAPI?.getUserById(id)
-        call?.enqueue(RestCallBack<RestUser>(success, failure))
+        call?.enqueue(RestCallBack<RestUser>(success, failure, {
+            if (it.error == null) {
+                sql?.sql()?.addUser(it)
+            }
+        }, {
+            return@RestCallBack sql?.sql()?.getUser(id)
+        }))
     }
 
+    private var discussions = ArrayList<Int>()
     fun getDiscussions(success: ((RestUsersList) -> Unit)?, failure: (() -> Unit)?) {
         val call = gerritAPI?.getDiscussions()
-        call?.enqueue(RestCallBack<RestUsersList>(success, failure))
+        call?.enqueue(RestCallBack<RestUsersList>(success, failure, {
+            if (it.error == null) {
+                discussions = ArrayList()
+                for (user in it.users!!) {
+                    sql?.sql()?.addUser(user)
+                    discussions.add(user.id!!)
+                }
+            }
+        }, {
+            val users = ArrayList<RestUser>()
+            val res = RestUsersList()
+            for (id in discussions) {
+                val user = sql?.sql()?.getUser(id)
+                if (user != null) {
+                    users.add(user)
+                }
+            }
+            res.users = users.toList()
+            return@RestCallBack res
+        }))
     }
 
 
@@ -111,9 +163,29 @@ class Rest {
     }
 
 
+    private var friends = ArrayList<Int>()
     fun getFriends(success: ((RestUsersList) -> Unit)?, failure: (() -> Unit)?) {
         val call = gerritAPI?.getFriends()
-        call?.enqueue(RestCallBack<RestUsersList>(success, failure))
+        call?.enqueue(RestCallBack<RestUsersList>(success, failure,{
+            if (it.error == null) {
+                friends = ArrayList()
+                for (user in it.users!!) {
+                    sql?.sql()?.addUser(user)
+                    friends.add(user.id!!)
+                }
+            }
+        }, {
+            val users = ArrayList<RestUser>()
+            val res = RestUsersList()
+            for (id in friends) {
+                val user = sql?.sql()?.getUser(id)
+                if (user != null) {
+                    users.add(user)
+                }
+            }
+            res.users = users.toList()
+            return@RestCallBack res
+        }))
     }
 
     fun addFriend(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Int) {
@@ -127,13 +199,49 @@ class Rest {
     }
 
 
+    private var groups = ArrayList<Int>()
     fun getGroups(success: ((RestGroupsList) -> Unit)?, failure: (() -> Unit)?) {
         val call = gerritAPI?.getGroups()
-        call?.enqueue(RestCallBack<RestGroupsList>(success, failure))
+        call?.enqueue(RestCallBack<RestGroupsList>(success, failure, {
+            if (it.error == null) {
+                groups = ArrayList()
+                for (group in it.groups!!) {
+                    val usersId = ArrayList<Int>()
+                    for (user in group.users!!) {
+                        usersId.add(user.id!!)
+                        sql?.sql()?.addUser(user)
+                    }
+                    group.usersId = usersId.toList()
+                    sql?.sql()?.addGroup(group)
+                    groups.add(group.id!!)
+                }
+            }
+        }, {
+            val groupsList = ArrayList<RestGroup>()
+            val res = RestGroupsList()
+            for (id in groups) {
+                val group = sql?.sql()?.getGroup(id)
+                val users = ArrayList<RestUser>()
+                for (userId in group?.usersId!!) {
+                    val user = sql?.sql()?.getUser(userId)
+                    user != null && users.add(user)
+                }
+                group.users = users.toList()
+                groupsList.add(group)
+            }
+            res.groups = groupsList.toList()
+            return@RestCallBack res
+        }))
     }
 
     fun getGroupById(success: ((RestGroup) -> Unit)?, failure: (() -> Unit)?, id: Int) {
         val call = gerritAPI?.getGroupById(id)
-        call?.enqueue(RestCallBack<RestGroup>(success, failure))
+        call?.enqueue(RestCallBack<RestGroup>(success, failure, {
+            if (it.error == null) {
+                sql?.sql()?.addGroup(it)
+            }
+        }, {
+            return@RestCallBack sql?.sql()?.getGroup(id)
+        }))
     }
 }
