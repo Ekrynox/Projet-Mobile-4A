@@ -16,6 +16,9 @@ interface RestApi {
     @GET("users")
     fun getUser() : Call<RestUser>
 
+    @GET("users/search/{filter}")
+    fun searchUsers(@Path("filter") filter : String) : Call<RestUsersList>
+
     @GET("users/{id}")
     fun getUserById(@Path("id") id : Int) : Call<RestUser>
 

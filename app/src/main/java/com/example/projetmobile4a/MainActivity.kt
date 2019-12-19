@@ -8,6 +8,9 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import com.example.projetmobile4a.mainActivityFragments.ContactsFragment
+import com.example.projetmobile4a.mainActivityFragments.DiscussionsFragment
+import com.example.projetmobile4a.mainActivityFragments.SettingsFragment
 import com.example.projetmobile4a.controller.Rest
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -28,7 +31,12 @@ class MainActivity : AppCompatActivity() {
         userPseudo = intent.extras?.getString("USER_PSEUDO") ?: ""
 
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.fragment, DiscussionsFragment(userId, userPseudo))
+        transaction.add(R.id.fragment,
+            DiscussionsFragment(
+                userId,
+                userPseudo
+            )
+        )
         transaction.commit()
 
         findViewById<BottomNavigationView>(R.id.bottom_navigation).setOnNavigationItemSelectedListener { onNavigationItemSelected(it) }
@@ -38,12 +46,32 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.messages -> {
                 val transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.fragment, DiscussionsFragment(userId, userPseudo))
+                transaction.replace(R.id.fragment,
+                    DiscussionsFragment(
+                        userId,
+                        userPseudo
+                    )
+                )
+                transaction.commit()
+            }
+            R.id.contacts -> {
+                val transaction = supportFragmentManager.beginTransaction()
+                transaction.replace(R.id.fragment,
+                    ContactsFragment(
+                        userId,
+                        userPseudo
+                    )
+                )
                 transaction.commit()
             }
             R.id.settings -> {
                 val transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.fragment, SettingsFragment(userId, userPseudo))
+                transaction.replace(R.id.fragment,
+                    SettingsFragment(
+                        userId,
+                        userPseudo
+                    )
+                )
                 transaction.commit()
             }
         }

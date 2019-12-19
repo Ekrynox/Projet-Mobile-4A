@@ -105,6 +105,11 @@ class Rest {
         }))
     }
 
+    fun searchUser(success: ((RestUsersList) -> Unit)?, failure: (() -> Unit)?, filter: String) {
+        val call = gerritAPI?.searchUsers(filter)
+        call?.enqueue(RestCallBack<RestUsersList>(success, failure))
+    }
+
     fun getUserById(success: ((RestUser) -> Unit)?, failure: (() -> Unit)?, id: Int) {
         val call = gerritAPI?.getUserById(id)
         call?.enqueue(RestCallBack<RestUser>(success, failure, {

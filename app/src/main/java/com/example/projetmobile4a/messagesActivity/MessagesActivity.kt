@@ -1,4 +1,4 @@
-package com.example.projetmobile4a
+package com.example.projetmobile4a.messagesActivity
 
 import android.os.Bundle
 import android.os.Handler
@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.projetmobile4a.R
 import com.example.projetmobile4a.controller.Rest
 import com.example.projetmobile4a.model.*
 import com.google.android.material.textfield.TextInputEditText
@@ -47,7 +48,13 @@ class MessagesActivity : AppCompatActivity() {
 
 
         viewManager = LinearLayoutManager(this)
-        viewAdapter = MessagesListAdapter(ArrayList(), ArrayList(), userId, userPseudo)
+        viewAdapter =
+            MessagesListAdapter(
+                ArrayList(),
+                ArrayList(),
+                userId,
+                userPseudo
+            )
         recyclerView = findViewById<RecyclerView>(R.id.my_recycler_view).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
@@ -109,7 +116,9 @@ class MessagesActivity : AppCompatActivity() {
     }
 
     fun buttonSendOnClick(@Suppress("UNUSED_PARAMETER") view: View) {
-        if (findViewById<TextInputEditText>(R.id.messageToSend).text == null || findViewById<TextInputEditText>(R.id.messageToSend).text!!.isEmpty()) {
+        if (findViewById<TextInputEditText>(R.id.messageToSend).text == null || findViewById<TextInputEditText>(
+                R.id.messageToSend
+            ).text!!.isEmpty()) {
             return
         }
         val data = RestMessageData()

@@ -1,4 +1,4 @@
-package com.example.projetmobile4a
+package com.example.projetmobile4a.messagesActivity
 
 import android.text.Html
 import android.view.Gravity
@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.projetmobile4a.R
 import com.example.projetmobile4a.model.RestMessage
 import com.example.projetmobile4a.model.RestUser
 
@@ -25,7 +26,9 @@ class MessagesListAdapter(private var messages: List<RestMessage>, private var u
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.messages_list, parent, false)
-        return MyViewHolder(view)
+        return MyViewHolder(
+            view
+        )
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {

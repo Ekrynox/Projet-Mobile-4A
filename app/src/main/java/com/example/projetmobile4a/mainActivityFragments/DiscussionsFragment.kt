@@ -1,4 +1,4 @@
-package com.example.projetmobile4a
+package com.example.projetmobile4a.mainActivityFragments
 
 
 import android.os.Bundle
@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.projetmobile4a.R
+import com.example.projetmobile4a.UsersListAdapter
 import com.example.projetmobile4a.controller.Rest
 import com.example.projetmobile4a.model.RestGroupOrUser
 import com.example.projetmobile4a.model.RestGroupsList
@@ -31,7 +33,13 @@ class DiscussionsFragment(private var userId: Int, private var userPseudo: Strin
         super.onActivityCreated(savedInstanceState)
 
         viewManager = LinearLayoutManager(activity)
-        viewAdapter = UsersListAdapter(ArrayList(), ArrayList(), this::updateUserList, userId, userPseudo)
+        viewAdapter = UsersListAdapter(
+            ArrayList(),
+            ArrayList(),
+            this::updateUserList,
+            userId,
+            userPseudo
+        )
         recyclerView = activity!!.findViewById<RecyclerView>(R.id.my_recycler_view).apply {
             setHasFixedSize(true)
             layoutManager = viewManager

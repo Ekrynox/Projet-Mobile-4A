@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.projetmobile4a.messagesActivity.MessagesActivity
 import com.example.projetmobile4a.controller.Rest
 import com.example.projetmobile4a.model.RestDefault
 import com.example.projetmobile4a.model.RestGroupOrUser
