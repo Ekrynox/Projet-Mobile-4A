@@ -22,7 +22,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        pref = getPreferences(Context.MODE_PRIVATE)
+        pref = getSharedPreferences("LoginPref", Context.MODE_PRIVATE)
 
         email = pref.getString("email", "")!!
         password = pref.getString("password", "")!!

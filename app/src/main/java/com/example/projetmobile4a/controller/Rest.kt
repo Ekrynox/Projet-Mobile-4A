@@ -91,6 +91,7 @@ class Rest {
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
+
     private var userId = 0
     fun getUser(success: ((RestUser) -> Unit)?, failure: (() -> Unit)?) {
         val call = gerritAPI?.getUser()
@@ -138,6 +139,11 @@ class Rest {
             res.users = users.toList()
             return@RestCallBack res
         }))
+    }
+
+    fun setPseudo(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, pseudo: String) {
+        val call = gerritAPI?.setPseudo(pseudo)
+        call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
 

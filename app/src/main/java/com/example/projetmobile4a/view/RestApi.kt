@@ -22,6 +22,10 @@ interface RestApi {
     @GET("users/discussions")
     fun getDiscussions() : Call<RestUsersList>
 
+    @FormUrlEncoded
+    @PUT("users")
+    fun setPseudo(@Field("pseudo") pseudo: String) : Call<RestDefault>
+
 
     @GET("messagesGroups/{id}")
     fun getMessagesGroups(@Path("id") id : Int) : Call<RestMessageList>
