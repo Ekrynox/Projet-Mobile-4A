@@ -8,10 +8,10 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import com.example.projetmobile4a.controller.Rest
 import com.example.projetmobile4a.mainActivityFragments.ContactsFragment
 import com.example.projetmobile4a.mainActivityFragments.DiscussionsFragment
 import com.example.projetmobile4a.mainActivityFragments.SettingsFragment
-import com.example.projetmobile4a.controller.Rest
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +20,10 @@ class MainActivity : AppCompatActivity() {
 
     private var userId = 0
     private var userPseudo = ""
+
+    private lateinit var discussionsFragment: DiscussionsFragment
+    private lateinit var contactsFragment: ContactsFragment
+    private lateinit var settingsFragment: SettingsFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,13 +34,12 @@ class MainActivity : AppCompatActivity() {
         userId = intent.extras?.getInt("USER_ID") ?: 0
         userPseudo = intent.extras?.getString("USER_PSEUDO") ?: ""
 
+        discussionsFragment = DiscussionsFragment(userId, userPseudo)
+        contactsFragment = ContactsFragment(userId, userPseudo)
+        settingsFragment = SettingsFragment(userId, userPseudo)
+
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.fragment,
-            DiscussionsFragment(
-                userId,
-                userPseudo
-            )
-        )
+        transaction.add(R.id.fragment, discussionsFragment)
         transaction.commit()
 
         findViewById<BottomNavigationView>(R.id.bottom_navigation).setOnNavigationItemSelectedListener { onNavigationItemSelected(it) }
@@ -46,32 +49,20 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.messages -> {
                 val transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.fragment,
-                    DiscussionsFragment(
-                        userId,
-                        userPseudo
-                    )
-                )
+                transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                transaction.replace(R.id.fragment, discussionsFragment)
                 transaction.commit()
             }
             R.id.contacts -> {
                 val transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.fragment,
-                    ContactsFragment(
-                        userId,
-                        userPseudo
-                    )
-                )
+                transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                transaction.replace(R.id.fragment, contactsFragment)
                 transaction.commit()
             }
             R.id.settings -> {
                 val transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.fragment,
-                    SettingsFragment(
-                        userId,
-                        userPseudo
-                    )
-                )
+                transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                transaction.replace(R.id.fragment, settingsFragment)
                 transaction.commit()
             }
         }
@@ -89,6 +80,9 @@ class MainActivity : AppCompatActivity() {
                     findViewById<TextView>(R.id.textinput_pseudo)?.text = userPseudo
                 } else {
                     userPseudo = findViewById<TextView>(R.id.textinput_pseudo)?.text.toString()
+                    discussionsFragment = DiscussionsFragment(userId, userPseudo)
+                    contactsFragment = ContactsFragment(userId, userPseudo)
+                    settingsFragment = SettingsFragment(userId, userPseudo)
                 }
             }, {
                 findViewById<TextView>(R.id.textinput_pseudo)?.text = userPseudo
