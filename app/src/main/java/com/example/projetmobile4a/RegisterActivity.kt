@@ -18,8 +18,6 @@ class RegisterActivity : AppCompatActivity() {
         api.register({
             if (it.error == null) {
                 finish()
-            } else {
-                println(it.error)
             }
         }, null, findViewById<TextView>(R.id.textinput_email).text.toString(), findViewById<TextView>(R.id.textinput_pseudo).text.toString(), findViewById<TextView>(R.id.textinput_password).text.toString())
     }
