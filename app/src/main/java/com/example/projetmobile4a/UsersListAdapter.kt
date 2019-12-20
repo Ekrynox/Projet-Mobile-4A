@@ -96,6 +96,22 @@ class UsersListAdapter(private var data: List<RestGroupOrUser>, private var frie
                 intent.putExtra("GROUP_ID", data[position].group!!.id)
                 context.startActivity(intent)
             }
+
+            val button = holder.view.findViewById<MaterialButton>(R.id.add_remove_button)
+
+            button.text = context.getString(R.string.quit)
+            button.icon = context.getDrawable(R.drawable.ic_clear_black_24dp)
+            button.iconTint = context.getColorStateList(R.color.colorRemove)
+            button.setTextColor(context.getColorStateList(R.color.colorRemove))
+            button.rippleColor = context.getColorStateList(R.color.colorRemove)
+
+            button.setOnClickListener {
+                rest.removeUserFromGroup(fun(res: RestDefault) {
+                    if (res.error == null) {
+                        update?.invoke()
+                    }
+                }, null, data[position].group!!.id!!, userId)
+            }
         }
     }
 

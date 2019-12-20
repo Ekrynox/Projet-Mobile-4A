@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "RestUser")
-class RestUser : RestDefault() {
+class RestUser(error: String? = null) : RestDefault(error) {
     @PrimaryKey
     @SerializedName("id")
     var id: Int? = null

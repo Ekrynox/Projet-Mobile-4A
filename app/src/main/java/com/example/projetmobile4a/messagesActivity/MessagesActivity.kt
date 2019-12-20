@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +32,11 @@ class MessagesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_messages)
         setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        //supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
+            finish()
+        }
 
 
         userId = intent.extras?.getInt("USER_ID") ?: 0
@@ -79,11 +84,6 @@ class MessagesActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.back -> {
-            finish()
-            true
-        }
-
         else -> {
             super.onOptionsItemSelected(item)
         }
@@ -95,6 +95,7 @@ class MessagesActivity : AppCompatActivity() {
                 if (messages.error == null) {
                     api.getUserById(fun(user: RestUser) {
                         if (user.error == null) {
+                            supportActionBar?.title = user.pseudo
                             viewAdapter.updateDataset(messages.messages!!, listOf(user))
                             scroll && findViewById<NestedScrollView>(R.id.nestedScrollView).fullScroll(View.FOCUS_DOWN)
                         }
@@ -106,6 +107,8 @@ class MessagesActivity : AppCompatActivity() {
                 if (messages.error == null) {
                     api.getGroupById(fun(group: RestGroup) {
                         if (group.error == null) {
+                            supportActionBar?.title = group.name
+                            println(messages.messages)
                             viewAdapter.updateDataset(messages.messages!!, group.users!!)
                             scroll && findViewById<NestedScrollView>(R.id.nestedScrollView).fullScroll(View.FOCUS_DOWN)
                         }

@@ -62,4 +62,7 @@ interface RestApi {
 
     @GET("groups/{id}")
     fun getGroupById(@Path("id") id : Int) : Call<RestGroup>
+
+    @DELETE("groups/{id}/users/{userId}")
+    fun removeUserFromGroup(@Path("id") id : Int, @Path("userId") userId : Int) : Call<RestDefault>
 }
