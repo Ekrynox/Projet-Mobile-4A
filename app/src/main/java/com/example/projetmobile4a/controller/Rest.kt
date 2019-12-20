@@ -62,8 +62,8 @@ class Rest {
         override fun onResponse(call: Call<T>, response: Response<T>) {
             if (response.isSuccessful) {
                 //Save data to the cache if a function have been given
-                sqlSet?.invoke(response.body())
-                success?.invoke(response.body())
+                sqlSet?.invoke(response.body()!!)
+                success?.invoke(response.body()!!)
             } else {
                 println(response.errorBody())
             }
@@ -88,7 +88,12 @@ class Rest {
 
     fun login(success: ((RestUser) -> Unit)?, failure: (() -> Unit)?, email: String, password: String) {
         val call = gerritAPI?.login(email, password)
-        call?.enqueue(RestCallBack<RestUser>(success, failure))
+        call?.enqueue(RestCallBack<RestUser>(success, failure, {
+            if (it.error == null) {
+                userId = it.id!!
+                sql?.sql()?.addUser(it)
+            }
+        }))
     }
 
     fun logout(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?) {
@@ -165,9 +170,9 @@ class Rest {
     fun getMessages(success: ((RestMessageList) -> Unit)?, failure: (() -> Unit)?, id: Int) {
         val call = gerritAPI?.getMessages(id)
         call?.enqueue(RestCallBack<RestMessageList>(success, failure, {
-            if (it.error != null) {
+            if (it.error == null) {
                 for (message in it.messages!!) {
-                    sql?.sql()?.addMessage(message)
+                    sql?.sql()?.addMessageUser(RestMessageUser(message))
                 }
             }
         }, {
@@ -187,15 +192,14 @@ class Rest {
         val call = gerritAPI?.getMessagesGroups(id)
         call?.enqueue(RestCallBack<RestMessageList>(success, failure,
             {
-                if (it.error != null) {
+                if (it.error == null) {
                     for (message in it.messages!!) {
-                        sql?.sql()?.addMessage(message)
+                        sql?.sql()?.addMessageGroup(RestMessageGroup(message))
                     }
                 }
             }, {
                 val res = RestMessageList()
                 res.messages = sql?.sql()?.getMessagesByGroup(id) ?: ArrayList()
-                println(res.messages)
                 return@RestCallBack res
             }))
     }
