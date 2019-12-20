@@ -11,11 +11,12 @@ Download the apk in the repository and install it on your android phone.
 A page where you can login: Email/password
 Login button -> open Main Activity if correct login
 Register button -> open Register Activity
-![MainActivity](55892457_1149658498528863_394923716040982528_n.png)
+<img src="Capture+_2019-12-20-15-12-02.png" width=200/>
 
 ### Register
 A page where you can register.
 Register Button -> close activity if the account is created
+<img src="Capture+_2019-12-20-15-12-10.png" width=200/>
 
 ### Main
 The main page which contains a bottom navigation with links to 3 Fragments.
