@@ -154,7 +154,17 @@ class Rest {
 
     fun getMessages(success: ((RestMessageList) -> Unit)?, failure: (() -> Unit)?, id: Int) {
         val call = gerritAPI?.getMessages(id)
-        call?.enqueue(RestCallBack<RestMessageList>(success, failure))
+        call?.enqueue(RestCallBack<RestMessageList>(success, failure, {
+            if (it.error != null) {
+                for (message in it.messages!!) {
+                    sql?.sql()?.addMessage(message)
+                }
+            }
+        }, {
+            val res = RestMessageList()
+            res.messages = sql?.sql()?.getMessagesByUser(userId, id) ?: ArrayList()
+            return@RestCallBack res
+        }))
     }
 
     fun addMessages(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Int, data: RestMessageData) {
@@ -165,7 +175,18 @@ class Rest {
 
     fun getMessagesGroups(success: ((RestMessageList) -> Unit)?, failure: (() -> Unit)?, id: Int) {
         val call = gerritAPI?.getMessagesGroups(id)
-        call?.enqueue(RestCallBack<RestMessageList>(success, failure))
+        call?.enqueue(RestCallBack<RestMessageList>(success, failure,
+            {
+                if (it.error != null) {
+                    for (message in it.messages!!) {
+                        sql?.sql()?.addMessage(message)
+                    }
+                }
+            }, {
+                val res = RestMessageList()
+                res.messages = sql?.sql()?.getMessagesByGroup(id) ?: ArrayList()
+                return@RestCallBack res
+            }))
     }
 
     fun addMessagesGroups(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Int, data: RestMessageData) {
