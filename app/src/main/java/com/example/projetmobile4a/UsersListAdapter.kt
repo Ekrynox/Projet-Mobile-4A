@@ -24,7 +24,7 @@ class UsersListAdapter(private var data: List<RestGroupOrUser>, private var frie
 
     class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
-    fun updateDataset(data: List<RestGroupOrUser>, friends: List<RestUser>) {
+    fun updateData(data: List<RestGroupOrUser>, friends: List<RestUser>) {
         this.data = data
         this.friends = friends
         notifyDataSetChanged()

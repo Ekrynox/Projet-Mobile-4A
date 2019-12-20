@@ -33,8 +33,8 @@ class ContactsFragment(private var userId: Int, private var userPseudo: String) 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        activity?.findViewById<TextInputEditText>(R.id.textinput_filter)?.setImeActionLabel(getString(R.string.search), KeyEvent.KEYCODE_ENTER)
-        activity?.findViewById<TextInputEditText>(R.id.textinput_filter)?.setOnKeyListener(object : View.OnKeyListener {
+        activity?.findViewById<TextInputEditText>(R.id.textInput_filter)?.setImeActionLabel(getString(R.string.search), KeyEvent.KEYCODE_ENTER)
+        activity?.findViewById<TextInputEditText>(R.id.textInput_filter)?.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent
             ): Boolean {
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -75,7 +75,7 @@ class ContactsFragment(private var userId: Int, private var userPseudo: String) 
     }
 
     private fun updateUserList() {
-        if (activity?.findViewById<TextInputEditText>(R.id.textinput_filter)?.text?.isEmpty() != false) {
+        if (activity?.findViewById<TextInputEditText>(R.id.textInput_filter)?.text?.isEmpty() != false) {
             api.getFriends(fun(users: RestUsersList) {
                 if (users.error == null) {
                     api.getFriends(fun(friends: RestUsersList) {
@@ -84,7 +84,7 @@ class ContactsFragment(private var userId: Int, private var userPseudo: String) 
                             for (user in users.users!!) {
                                 data.add(RestGroupOrUser(user))
                             }
-                            viewAdapter.updateDataset(data, friends.users!!)
+                            viewAdapter.updateData(data, friends.users!!)
                         }
                     }, null)
                 }
@@ -98,11 +98,11 @@ class ContactsFragment(private var userId: Int, private var userPseudo: String) 
                             for (user in users.users!!) {
                                 data.add(RestGroupOrUser(user))
                             }
-                            viewAdapter.updateDataset(data, friends.users!!)
+                            viewAdapter.updateData(data, friends.users!!)
                         }
                     }, null)
                 }
-            }, null, activity?.findViewById<TextInputEditText>(R.id.textinput_filter)?.text.toString())
+            }, null, activity?.findViewById<TextInputEditText>(R.id.textInput_filter)?.text.toString())
         }
     }
 }
