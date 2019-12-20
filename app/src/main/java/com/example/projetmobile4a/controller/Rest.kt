@@ -70,13 +70,13 @@ class Rest {
         }
         override fun onFailure(call: Call<T>, t: Throwable) {
             if (sqlGet == null) {
-                //t.printStackTrace()
+                t.printStackTrace()
                 failure?.invoke()
             } else {
                 //Try to retrieve the data from the cache if Rest request failed
                 val res = sqlGet.invoke()
                 if (res == null) {
-                    //t.printStackTrace()
+                    t.printStackTrace()
                     failure?.invoke()
                 } else {
                     success?.invoke(res)
@@ -156,6 +156,11 @@ class Rest {
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
+    fun register(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, email: String, pseudo: String, password: String) {
+        val call = gerritAPI?.register(email, pseudo, password)
+        call?.enqueue(RestCallBack<RestDefault>(success, failure))
+    }
+
 
     fun getMessages(success: ((RestMessageList) -> Unit)?, failure: (() -> Unit)?, id: Int) {
         val call = gerritAPI?.getMessages(id)
@@ -190,6 +195,7 @@ class Rest {
             }, {
                 val res = RestMessageList()
                 res.messages = sql?.sql()?.getMessagesByGroup(id) ?: ArrayList()
+                println(res.messages)
                 return@RestCallBack res
             }))
     }

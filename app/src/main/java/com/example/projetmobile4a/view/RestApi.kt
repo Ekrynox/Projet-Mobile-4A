@@ -29,6 +29,10 @@ interface RestApi {
     @PUT("users")
     fun setPseudo(@Field("pseudo") pseudo: String) : Call<RestDefault>
 
+    @FormUrlEncoded
+    @POST("users")
+    fun register(@Field("email") email : String, @Field("pseudo") pseudo : String, @Field("password") password : String) : Call<RestDefault>
+
 
     @GET("messagesGroups/{id}")
     fun getMessagesGroups(@Path("id") id : Int) : Call<RestMessageList>
