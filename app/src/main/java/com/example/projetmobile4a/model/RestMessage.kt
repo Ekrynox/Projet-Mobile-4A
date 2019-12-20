@@ -1,12 +1,10 @@
 package com.example.projetmobile4a.model
 
 import androidx.room.Embedded
-import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "RestMessage")
-class RestMessage {
+open class RestMessage(message: RestMessage? = null) {
     @PrimaryKey
     @SerializedName("id")
     var id: Int? = null
@@ -26,4 +24,13 @@ class RestMessage {
     @Embedded
     @SerializedName("data")
     var data: RestMessageData? = null
+
+    init {
+        id = message?.id
+        user = message?.user
+        user2 = message?.user2
+        group = message?.group
+        date = message?.date
+        data = message?.data
+    }
 }

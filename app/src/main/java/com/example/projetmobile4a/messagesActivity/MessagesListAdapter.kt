@@ -17,7 +17,7 @@ class MessagesListAdapter(private var messages: List<RestMessage>, private var u
 
     class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
-    fun updateDataset(messages: List<RestMessage>, users: List<RestUser>) {
+    fun updateData(messages: List<RestMessage>, users: List<RestUser>) {
         this.messages = messages
         this.users = users
         notifyDataSetChanged()

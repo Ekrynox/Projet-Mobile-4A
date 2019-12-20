@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         discussionsFragment = DiscussionsFragment(userId, userPseudo)
         contactsFragment = ContactsFragment(userId, userPseudo)
-        settingsFragment = SettingsFragment(userId, userPseudo)
+        settingsFragment = SettingsFragment(userPseudo)
 
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.fragment, discussionsFragment)
@@ -70,23 +70,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun buttonCancelOnClick(@Suppress("UNUSED_PARAMETER") view: View) {
-        findViewById<TextView>(R.id.textinput_pseudo)?.text = userPseudo
+        findViewById<TextView>(R.id.textInput_pseudo)?.text = userPseudo
     }
 
     fun buttonValidateOnClick(@Suppress("UNUSED_PARAMETER") view: View) {
-        if (findViewById<TextView>(R.id.textinput_pseudo)?.text!!.isNotEmpty()) {
+        if (findViewById<TextView>(R.id.textInput_pseudo)?.text!!.isNotEmpty()) {
             api.setPseudo({
                 if (it.error != null) {
-                    findViewById<TextView>(R.id.textinput_pseudo)?.text = userPseudo
+                    findViewById<TextView>(R.id.textInput_pseudo)?.text = userPseudo
                 } else {
-                    userPseudo = findViewById<TextView>(R.id.textinput_pseudo)?.text.toString()
+                    userPseudo = findViewById<TextView>(R.id.textInput_pseudo)?.text.toString()
                     discussionsFragment = DiscussionsFragment(userId, userPseudo)
                     contactsFragment = ContactsFragment(userId, userPseudo)
-                    settingsFragment = SettingsFragment(userId, userPseudo)
+                    settingsFragment = SettingsFragment(userPseudo)
                 }
             }, {
-                findViewById<TextView>(R.id.textinput_pseudo)?.text = userPseudo
-            }, findViewById<TextView>(R.id.textinput_pseudo)?.text.toString())
+                findViewById<TextView>(R.id.textInput_pseudo)?.text = userPseudo
+            }, findViewById<TextView>(R.id.textInput_pseudo)?.text.toString())
         }
     }
 

@@ -36,8 +36,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun buttonLoginOnClick(@Suppress("UNUSED_PARAMETER") view: View) {
-        email = findViewById<EditText>(R.id.textinput_email).text.toString()
-        password = findViewById<EditText>(R.id.textinput_password).text.toString()
+        email = findViewById<EditText>(R.id.textInput_email).text.toString()
+        password = findViewById<EditText>(R.id.textInput_password).text.toString()
         api.login(this::loginResponse, null, email, password)
     }
 

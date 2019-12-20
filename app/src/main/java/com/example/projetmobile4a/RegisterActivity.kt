@@ -19,6 +19,6 @@ class RegisterActivity : AppCompatActivity() {
             if (it.error == null) {
                 finish()
             }
-        }, null, findViewById<TextView>(R.id.textinput_email).text.toString(), findViewById<TextView>(R.id.textinput_pseudo).text.toString(), findViewById<TextView>(R.id.textinput_password).text.toString())
+        }, null, findViewById<TextView>(R.id.textInput_email).text.toString(), findViewById<TextView>(R.id.textInput_pseudo).text.toString(), findViewById<TextView>(R.id.textInput_password).text.toString())
     }
 }

@@ -96,7 +96,7 @@ class MessagesActivity : AppCompatActivity() {
                     api.getUserById(fun(user: RestUser) {
                         if (user.error == null) {
                             supportActionBar?.title = user.pseudo
-                            viewAdapter.updateDataset(messages.messages!!, listOf(user))
+                            viewAdapter.updateData(messages.messages!!, listOf(user))
                             scroll && findViewById<NestedScrollView>(R.id.nestedScrollView).fullScroll(View.FOCUS_DOWN)
                         }
                     }, null, discussionId)
@@ -109,7 +109,7 @@ class MessagesActivity : AppCompatActivity() {
                         if (group.error == null) {
                             supportActionBar?.title = group.name
                             println(messages.messages)
-                            viewAdapter.updateDataset(messages.messages!!, group.users!!)
+                            viewAdapter.updateData(messages.messages!!, group.users!!)
                             scroll && findViewById<NestedScrollView>(R.id.nestedScrollView).fullScroll(View.FOCUS_DOWN)
                         }
                     }, null, discussionId)

@@ -32,7 +32,7 @@ class Rest {
     private val apiURL = "https://hollywood-messenger-mobile.glitch.me/api/"
     private var gson : Gson? = null
     private var retrofit : Retrofit? = null
-    private var gerritAPI : RestApi? = null
+    private var getAPI : RestApi? = null
 
     private var interceptor : HttpLoggingInterceptor? = null
     private var cookie : CookieHandler? = null
@@ -47,8 +47,8 @@ class Rest {
         client = OkHttpClient.Builder().addNetworkInterceptor(interceptor!!).cookieJar(JavaNetCookieJar(cookie!!)).build()
 
         gson = GsonBuilder().setLenient().create()
-        retrofit = Retrofit.Builder().baseUrl(apiURL).addConverterFactory(GsonConverterFactory.create(gson)).client(client!!).build()
-        gerritAPI = retrofit?.create(RestApi::class.java)
+        retrofit = Retrofit.Builder().baseUrl(apiURL).addConverterFactory(GsonConverterFactory.create(gson!!)).client(client!!).build()
+        getAPI = retrofit?.create(RestApi::class.java)
 
         //Get the SQL Room Instance for cache
         if (GlobalApplication.getAppContext() != null) {
@@ -62,8 +62,8 @@ class Rest {
         override fun onResponse(call: Call<T>, response: Response<T>) {
             if (response.isSuccessful) {
                 //Save data to the cache if a function have been given
-                sqlSet?.invoke(response.body())
-                success?.invoke(response.body())
+                sqlSet?.invoke(response.body()!!)
+                success?.invoke(response.body()!!)
             } else {
                 println(response.errorBody())
             }
@@ -87,19 +87,24 @@ class Rest {
 
 
     fun login(success: ((RestUser) -> Unit)?, failure: (() -> Unit)?, email: String, password: String) {
-        val call = gerritAPI?.login(email, password)
-        call?.enqueue(RestCallBack<RestUser>(success, failure))
+        val call = getAPI?.login(email, password)
+        call?.enqueue(RestCallBack<RestUser>(success, failure, {
+            if (it.error == null) {
+                userId = it.id!!
+                sql?.sql()?.addUser(it)
+            }
+        }))
     }
 
     fun logout(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?) {
-        val call = gerritAPI?.logout()
+        val call = getAPI?.logout()
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
 
     private var userId = 0
     fun getUser(success: ((RestUser) -> Unit)?, failure: (() -> Unit)?) {
-        val call = gerritAPI?.getUser()
+        val call = getAPI?.getUser()
         call?.enqueue(RestCallBack<RestUser>(success, failure, {
             if (it.error == null) {
                 userId = it.id!!
@@ -111,12 +116,12 @@ class Rest {
     }
 
     fun searchUser(success: ((RestUsersList) -> Unit)?, failure: (() -> Unit)?, filter: String) {
-        val call = gerritAPI?.searchUsers(filter)
+        val call = getAPI?.searchUsers(filter)
         call?.enqueue(RestCallBack<RestUsersList>(success, failure))
     }
 
     fun getUserById(success: ((RestUser) -> Unit)?, failure: (() -> Unit)?, id: Int) {
-        val call = gerritAPI?.getUserById(id)
+        val call = getAPI?.getUserById(id)
         call?.enqueue(RestCallBack<RestUser>(success, failure, {
             if (it.error == null) {
                 sql?.sql()?.addUser(it)
@@ -128,7 +133,7 @@ class Rest {
 
     private var discussions = ArrayList<Int>()
     fun getDiscussions(success: ((RestUsersList) -> Unit)?, failure: (() -> Unit)?) {
-        val call = gerritAPI?.getDiscussions()
+        val call = getAPI?.getDiscussions()
         call?.enqueue(RestCallBack<RestUsersList>(success, failure, {
             if (it.error == null) {
                 discussions = ArrayList()
@@ -152,22 +157,22 @@ class Rest {
     }
 
     fun setPseudo(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, pseudo: String) {
-        val call = gerritAPI?.setPseudo(pseudo)
+        val call = getAPI?.setPseudo(pseudo)
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
     fun register(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, email: String, pseudo: String, password: String) {
-        val call = gerritAPI?.register(email, pseudo, password)
+        val call = getAPI?.register(email, pseudo, password)
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
 
     fun getMessages(success: ((RestMessageList) -> Unit)?, failure: (() -> Unit)?, id: Int) {
-        val call = gerritAPI?.getMessages(id)
+        val call = getAPI?.getMessages(id)
         call?.enqueue(RestCallBack<RestMessageList>(success, failure, {
-            if (it.error != null) {
+            if (it.error == null) {
                 for (message in it.messages!!) {
-                    sql?.sql()?.addMessage(message)
+                    sql?.sql()?.addMessageUser(RestMessageUser(message))
                 }
             }
         }, {
@@ -178,37 +183,36 @@ class Rest {
     }
 
     fun addMessages(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Int, data: RestMessageData) {
-        val call = gerritAPI?.addMessages(id, gson!!.toJson(data))
+        val call = getAPI?.addMessages(id, gson!!.toJson(data))
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
 
     fun getMessagesGroups(success: ((RestMessageList) -> Unit)?, failure: (() -> Unit)?, id: Int) {
-        val call = gerritAPI?.getMessagesGroups(id)
+        val call = getAPI?.getMessagesGroups(id)
         call?.enqueue(RestCallBack<RestMessageList>(success, failure,
             {
-                if (it.error != null) {
+                if (it.error == null) {
                     for (message in it.messages!!) {
-                        sql?.sql()?.addMessage(message)
+                        sql?.sql()?.addMessageGroup(RestMessageGroup(message))
                     }
                 }
             }, {
                 val res = RestMessageList()
                 res.messages = sql?.sql()?.getMessagesByGroup(id) ?: ArrayList()
-                println(res.messages)
                 return@RestCallBack res
             }))
     }
 
     fun addMessagesGroups(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Int, data: RestMessageData) {
-        val call = gerritAPI?.addMessagesGroups(id, gson!!.toJson(data))
+        val call = getAPI?.addMessagesGroups(id, gson!!.toJson(data))
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
 
     private var friends = ArrayList<Int>()
     fun getFriends(success: ((RestUsersList) -> Unit)?, failure: (() -> Unit)?) {
-        val call = gerritAPI?.getFriends()
+        val call = getAPI?.getFriends()
         call?.enqueue(RestCallBack<RestUsersList>(success, failure,{
             if (it.error == null) {
                 friends = ArrayList()
@@ -230,19 +234,19 @@ class Rest {
     }
 
     fun addFriend(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Int) {
-        val call = gerritAPI?.addFriend(id)
+        val call = getAPI?.addFriend(id)
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
     fun removeFriend(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Int) {
-        val call = gerritAPI?.removeFriend(id)
+        val call = getAPI?.removeFriend(id)
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 
 
     private var groups = ArrayList<Int>()
     fun getGroups(success: ((RestGroupsList) -> Unit)?, failure: (() -> Unit)?) {
-        val call = gerritAPI?.getGroups()
+        val call = getAPI?.getGroups()
         call?.enqueue(RestCallBack<RestGroupsList>(success, failure, {
             if (it.error == null) {
                 groups = ArrayList()
@@ -276,7 +280,7 @@ class Rest {
     }
 
     fun getGroupById(success: ((RestGroup) -> Unit)?, failure: (() -> Unit)?, id: Int) {
-        val call = gerritAPI?.getGroupById(id)
+        val call = getAPI?.getGroupById(id)
         call?.enqueue(RestCallBack<RestGroup>(success, failure, {
             if (it.error == null) {
                 val usersId = ArrayList<Int>()
@@ -300,7 +304,7 @@ class Rest {
     }
 
     fun removeUserFromGroup(success: ((RestDefault) -> Unit)?, failure: (() -> Unit)?, id: Int, userId: Int) {
-        val call = gerritAPI?.removeUserFromGroup(id, userId)
+        val call = getAPI?.removeUserFromGroup(id, userId)
         call?.enqueue(RestCallBack<RestDefault>(success, failure))
     }
 }

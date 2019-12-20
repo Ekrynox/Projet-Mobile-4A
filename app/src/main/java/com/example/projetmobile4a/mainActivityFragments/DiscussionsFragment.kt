@@ -75,7 +75,7 @@ class DiscussionsFragment(private var userId: Int, private var userPseudo: Strin
                                 for (group in groups.groups!!) {
                                     data.add(RestGroupOrUser(group))
                                 }
-                                viewAdapter.updateDataset(data, friends.users!!)
+                                viewAdapter.updateData(data, friends.users!!)
                             }
                         }, null)
                     }
