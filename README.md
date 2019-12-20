@@ -11,11 +11,13 @@ Download the apk in the repository and install it on your android phone.
 A page where you can login: Email/password
 Login button -> open Main Activity if correct login
 Register button -> open Register Activity
+
 <img src="Capture+_2019-12-20-15-12-02.png" width=200/>
 
 ### Register
 A page where you can register.
 Register Button -> close activity if the account is created
+
 <img src="Capture+_2019-12-20-15-12-10.png" width=200/>
 
 ### Main
@@ -24,11 +26,19 @@ The main page which contains a bottom navigation with links to 3 Fragments.
 #### Discussions
 Show all recent discutions of the users.
 
+<img src="Capture+_2019-12-20-15-11-20.png" width=200/>
+
 #### Contacts
 Show all contact of the users.
+You can also search all users by name.
+
+<img src="Capture+_2019-12-20-15-11-30.png" width=200/>
+<img src="Capture+_2019-12-20-15-11-44.png" width=200/>
 
 #### Settings
 Allow to change Pseudo and logout.
+
+<img src="Capture+_2019-12-20-15-11-53.png" width=200/>
 
 ### Messages
 Show the messages between the user and another user or a group.
