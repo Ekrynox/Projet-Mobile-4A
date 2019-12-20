@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="false"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textinput_pseudo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/pseudo"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_cancel"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:layout_weight="1"
+            android:onClick="buttonCancelOnClick"
+            android:text="@android:string/cancel"
+            android:textColor="@color/colorAccent"
+            android:textColorHighlight="@color/colorAccent"
+            android:textColorHint="@color/colorAccent"
+            android:textColorLink="@color/colorAccent"
+            app:strokeColor="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/button_validate"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:layout_weight="1"
+            android:onClick="buttonValidateOnClick"
+            android:text="@string/validate"
+            android:textColor="@color/colorAdd"
+            android:textColorHighlight="@color/colorAdd"
+            android:textColorLink="@color/colorAdd"
+            app:strokeColor="@color/colorAdd" />
+
+        <Button
+            android:id="@+id/button_logout"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:layout_weight="1"
+            android:onClick="buttonLogoutOnClick"
+            android:text="@string/logout"
+            android:textColor="@color/colorRemove"
+            android:textColorHint="@color/colorRemove"
+            android:textColorLink="@color/colorRemove"
+            app:strokeColor="@color/colorRemove" />
+    </LinearLayout>
+
+</LinearLayout>
